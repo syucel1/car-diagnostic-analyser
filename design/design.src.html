@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>car-diagnostic-analyser — Design</title>
+<style>
+  :root { --ink:#1f2d3a; --muted:#5b6b7a; --line:#dde3ea; --accent:#1f6feb; --ok:#2da44e; --warn:#bf8700; --bad:#cf222e; --manual:#8250df; --soft:#f6f8fa; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.6 "Segoe UI", Helvetica, Arial, sans-serif; color:var(--ink); background:#fff; }
+  main { max-width:1000px; margin:0 auto; padding:40px 32px 80px; }
+  header.cover { border-bottom:3px solid var(--ink); padding-bottom:20px; margin-bottom:28px; }
+  header.cover h1 { font-size:34px; margin:0 0 6px; letter-spacing:-0.5px; }
+  header.cover p { margin:0; color:var(--muted); }
+  .meta { display:flex; gap:24px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin-top:12px; }
+  h2 { font-size:22px; margin:44px 0 10px; padding-top:8px; border-top:1px solid var(--line); }
+  h2 .n { color:var(--accent); margin-right:8px; }
+  h3 { font-size:16px; margin:24px 0 6px; }
+  p, li { max-width:78ch; }
+  code, .mono { font-family:Consolas, "SFMono-Regular", Menlo, monospace; font-size:13px; background:var(--soft); padding:1px 5px; border-radius:4px; }
+  pre { background:#0f1419; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow:auto; font-size:12.5px; line-height:1.5; }
+  pre code { background:none; padding:0; color:inherit; }
+  table { border-collapse:collapse; width:100%; margin:12px 0 18px; font-size:13.5px; }
+  th, td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--soft); font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.3px; color:var(--muted); }
+  figure { margin:16px 0 22px; }
+  figure svg { width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:10px; }
+  figcaption { font-size:12.5px; color:var(--muted); margin-top:6px; }
+  .callout { border-left:4px solid var(--accent); background:#f1f6ff; padding:12px 16px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .callout.red { border-color:var(--bad); background:#fff3f3; }
+  .callout.amber { border-color:var(--warn); background:#fff8e6; }
+  .pill { display:inline-block; padding:1px 9px; border-radius:10px; font-size:12px; font-weight:600; white-space:nowrap; }
+  .p-ok { background:#dafbe1; color:#116329; } .p-warn { background:#fff1c2; color:#7d4e00; }
+  .p-bad { background:#ffe2e0; color:#a40e26; } .p-grey { background:#eaeef2; color:#57606a; }
+  .p-man { background:#efe5ff; color:#5a32a3; } .p-run { background:#ddf4ff; color:#0550ae; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card h4 { margin:0 0 6px; font-size:14px; }
+  .card ul { margin:0; padding-left:18px; font-size:13.5px; }
+  nav.toc { columns:2; font-size:14px; background:var(--soft); padding:14px 20px; border-radius:10px; }
+  nav.toc a { color:var(--ink); text-decoration:none; } nav.toc a:hover { color:var(--accent); }
+  nav.toc ol { margin:0; padding-left:20px; }
+  .phase { display:grid; grid-template-columns:110px 1fr; gap:4px 14px; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--line); }
+  .phase b { color:var(--accent); }
+  @media print {
+    body { font-size:10pt; }
+    main { max-width:none; padding:0; }
+    h2, h3 { break-after:avoid; }
+    h2 { margin-top:26px; }
+    figure, .callout, .phase, tr, li { break-inside:avoid; }
+    pre { white-space:pre-wrap; word-break:break-word; font-size:9pt; }
+    table { font-size:9.5pt; }
+    .pagebreak { break-before:page; }
+    nav.toc a { color:var(--ink); }
+  }
+  @page { size:A4; margin:16mm 14mm; }
+</style>
+</head>
+<body>
+<main>
+
+<header class="cover">
+  <h1>car-diagnostic-analyser</h1>
+  <p>Browser-based, read-only car diagnostics over a USB OBD-II adapter — with a live view of every check as it runs.</p>
+  <div class="meta"><span>Design document · v0.1</span><span>Author: Serkan Yucel</span><span>Status: Draft</span><span>{{date}}</span></div>
+</header>
+
+<nav class="toc">
+  <ol>
+    <li><a href="#goals">Goals and scope</a></li>
+    <li><a href="#connect">How it connects</a></li>
+    <li><a href="#coverage">What can be checked</a></li>
+    <li><a href="#safety">Safety: read-only by construction</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#engine">Scan engine and progress</a></li>
+    <li><a href="#ui">Screens</a></li>
+    <li><a href="#data">Data model and storage</a></li>
+    <li><a href="#stack">Tech stack and repo layout</a></li>
+    <li><a href="#testing">Testing and the demo car</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#risks">Risks and open questions</a></li>
+  </ol>
+</nav>
+
+<h2 id="goals"><span class="n">1</span>Goals and scope</h2>
+<p>Plug a USB OBD-II adapter into the car and a laptop, open the app in Chrome, press <b>Run scan</b>, and watch a top-down car diagram light up system by system while a counter shows exactly how many checks have run and what each one returned. Finish with a report that separates what the car <i>told us</i> from what <i>needs a human to look at</i>.</p>
+<p>It's a personal project that starts with the generic OBD-II basics and grows one vehicle system at a time.</p>
+<div class="grid2">
+  <div class="card"><h4>Goals</h4><ul>
+    <li>One-click full scan of everything the connected car exposes</li>
+    <li>Honest progress: “23 of 41 checks · ABS timed out”, never a fake health %</li>
+    <li>Fault codes with plain-English meaning and freeze-frame context</li>
+    <li>Live readings (RPM, coolant, battery voltage, fuel trims …)</li>
+    <li>Maintenance and inspection log for things no ECU reports (pads, oil, filters, tyre gauge readings)</li>
+    <li>Scan history, compare two scans, export a PDF report</li>
+    <li>A demo car so anyone can try it without hardware</li>
+  </ul></div>
+  <div class="card"><h4>Non-goals (for now)</h4><ul>
+    <li>Clearing fault codes, actuator tests, coding, adaptations, key programming</li>
+    <li>Mobile browsers and Bluetooth adapters (Web Serial is desktop Chrome/Edge)</li>
+    <li>Coverage of every make — profiles are added one car at a time</li>
+    <li>Cloud accounts or sync; all data stays in the browser</li>
+    <li>Diagnosing <i>why</i> beyond well-known common causes</li>
+  </ul></div>
+</div>
+
+<h2 id="connect"><span class="n">2</span>How it connects</h2>
+<figure>{{svg:connection}}<figcaption>Figure 1 — Car diagnostic socket → USB adapter → laptop → browser app.</figcaption></figure>
+<p>Every car sold in the EU since 2001 (petrol) / 2004 (diesel) has a standard 16-pin diagnostic socket (EOBD, the European equivalent of OBD-II), usually under the dashboard on the driver's side. A USB adapter built on an ELM327-compatible chip (genuine ELM327, or the faster STN chips in OBDLink devices) translates simple text commands into the car's bus protocol and shows up on the laptop as a virtual COM port. The browser talks to that port through the <b>Web Serial API</b>.</p>
+<table>
+  <tr><th>Layer</th><th>Choice for v1</th><th>Why</th></tr>
+  <tr><td>Adapter</td><td>OBDLink EX (USB, STN chip, FTDI serial) — any ELM327-compatible USB adapter should work</td><td>Reliable, fast, well documented; cheap ELM327 clones often have buggy firmware</td></tr>
+  <tr><td>Browser</td><td>Chrome or Edge, desktop (Windows first)</td><td>Only Chromium desktop ships Web Serial; requires HTTPS or <code>localhost</code></td></tr>
+  <tr><td>Car protocol</td><td>Auto-detect (<code>ATSP0</code>); expect ISO 15765-4 CAN on most post-2008 cars</td><td>The adapter handles CAN, KWP2000 and ISO 9141 for us</td></tr>
+  <tr><td>Serial settings</td><td>Try 115200 then 38400 baud, 8N1</td><td>STN adapters default high; many ELM327 clones use 38400</td></tr>
+</table>
+
+<h2 id="coverage"><span class="n">3</span>What can be checked</h2>
+<p>Generic OBD-II only guarantees emissions-related data from the engine computer. Everything else (ABS, airbags, gearbox, body, tyre pressures, oil life) lives in other modules that need manufacturer-specific requests. The app treats each check's <b>source</b> as a first-class field so the report never implies more than it knows.</p>
+<table>
+  <tr><th>System</th><th>Checks</th><th>Source</th><th>Phase</th></tr>
+  <tr><td>Engine</td><td>Stored / pending / permanent fault codes, check-engine light, freeze frame, distance with MIL on, distance since codes cleared</td><td><span class="pill p-ok">Generic</span> services 01, 02, 03, 07, 0A</td><td>1–6</td></tr>
+  <tr><td>Emissions</td><td>Readiness monitors (catalyst, O₂ sensors, EVAP, EGR, misfire, fuel system …) — useful before an MOT</td><td><span class="pill p-ok">Generic</span> 01 01, 01 41</td><td>5</td></tr>
+  <tr><td>Live engine data</td><td>RPM, speed, coolant, intake air, load, throttle, MAF/MAP, fuel trims, O₂ sensors, timing, run time</td><td><span class="pill p-ok">Generic</span> service 01 (where supported)</td><td>7</td></tr>
+  <tr><td>Battery / charging</td><td>Module voltage (01 42) or adapter pin voltage (<code>ATRV</code>); cranking dip, charging voltage at idle</td><td><span class="pill p-ok">Generic</span> / adapter</td><td>3</td></tr>
+  <tr><td>Oil</td><td>Oil temperature (01 5C, rarely supported); oil-life % and service-due counters</td><td><span class="pill p-grey">Generic, rare</span> / <span class="pill p-warn">Profile</span></td><td>7 / 16</td></tr>
+  <tr><td>Vehicle identity</td><td>VIN, calibration IDs, ECU name</td><td><span class="pill p-ok">Generic</span> service 09</td><td>3</td></tr>
+  <tr><td>ABS / brakes</td><td>ABS module fault codes, wheel-speed sensors, pad-wear warning (if the car has wear sensors)</td><td><span class="pill p-warn">Profile</span> UDS 19 / 22</td><td>14</td></tr>
+  <tr><td>Tyres</td><td>Per-wheel pressure &amp; temperature on cars with <i>direct</i> TPMS; warning-only on <i>indirect</i> TPMS (uses ABS wheel speeds, no pressures exist)</td><td><span class="pill p-warn">Profile</span></td><td>15</td></tr>
+  <tr><td>Gearbox, airbags, body</td><td>Module fault codes, gearbox fluid temperature</td><td><span class="pill p-warn">Profile</span></td><td>later</td></tr>
+  <tr><td>Things no ECU knows</td><td>Brake pad / disc thickness, brake fluid age, oil level &amp; condition, air / cabin / fuel filters, tyre tread depth, wipers, lights</td><td><span class="pill p-man">Manual</span> inspection log + service intervals</td><td>12</td></tr>
+</table>
+
+<h2 id="safety"><span class="n">4</span>Safety: read-only by construction</h2>
+<p>A diagnostic adapter can send commands that clear codes, run actuator tests, reset modules or rewrite settings. This app is a reader, and that is enforced in code, not by convention.</p>
+<div class="callout red"><b>Rule:</b> every byte sequence sent to the car passes through a single <code>ReadOnlyGuard.check(request)</code>. Anything not on the allowlist throws <code>ForbiddenRequestError</code> before it reaches the serial port. There is no “advanced mode” switch.</div>
+<table>
+  <tr><th>Allowed</th><th>Blocked (always)</th></tr>
+  <tr><td>
+    OBD-II 01 current data · 02 freeze frame · 03 stored codes · 06 test results · 07 pending codes · 09 vehicle info · 0A permanent codes<br>
+    UDS 19 read DTC info · 22 read data by ID · 3E tester present · 10 01 default session only<br>
+    Adapter config: <code>ATZ ATE0 ATL0 ATS0 ATH1 ATSP0 ATDPN ATRV ATI ATSH ATCRA ATST ATAT</code>
+  </td><td>
+    OBD-II 04 clear codes · 08 on-board control<br>
+    UDS 11 ECU reset · 14 clear DTCs · 27 security access · 28 comms control · 2E write data · 2F I/O control · 31 routines · 34–37 up/download · 3D write memory · 85 DTC setting · 10 02/03 non-default sessions<br>
+    Any unknown AT/ST command, raw <code>ATMA</code> bus monitor
+  </td></tr>
+</table>
+<p>Operational rules shown on the connect screen: car parked, handbrake on, ignition on; never scan while driving; unplug the adapter afterwards (some drain the battery). If the battery is below 11.8 V the app warns before starting. Full list in <code>design/safety-allowlist.md</code>.</p>
+
+<h2 id="arch"><span class="n">5</span>Architecture</h2>
+<figure>{{svg:architecture}}<figcaption>Figure 2 — Layers. The UI never talks to the transport directly; everything goes through the scan engine and the read-only guard.</figcaption></figure>
+<div class="grid2">
+  <div class="card"><h4>Transport</h4><ul>
+    <li>One interface: <code>open()</code>, <code>send(cmd, timeoutMs) → string[]</code>, <code>close()</code></li>
+    <li><b>ElmSerialTransport</b>: Web Serial, line framing on the <code>&gt;</code> prompt, one command in flight at a time</li>
+    <li><b>SimulatorTransport</b>: answers like an ELM327 from a scenario file, with configurable latency and failures</li>
+  </ul></div>
+  <div class="card"><h4>Protocol</h4><ul>
+    <li>Builds requests (<code>0105</code>, <code>1902FF</code>) and parses replies, including multi-frame ISO-TP responses and multiple ECUs answering</li>
+    <li>Maps adapter errors (<code>NO DATA</code>, <code>UNABLE TO CONNECT</code>, <code>CAN ERROR</code>, <code>?</code>) to typed results</li>
+    <li>Decoders are pure functions from bytes to values — easy to unit test</li>
+  </ul></div>
+  <div class="card"><h4>Scan engine</h4><ul>
+    <li><b>Discovery</b>: protocol, VIN, which PIDs the car supports (bitmaps 0100/0120/0140…), which modules answer</li>
+    <li><b>Planner</b>: turns discovery + profiles into an ordered list of checks, so the total is known before running</li>
+    <li><b>Runner</b>: executes sequentially, emits events, handles timeout/retry/cancel</li>
+  </ul></div>
+  <div class="card"><h4>Profiles (data, not code)</h4><ul>
+    <li><code>generic-obd2.json</code> applies to every car</li>
+    <li>Per-vehicle JSON adds modules (CAN header, e.g. ABS <code>7B0/7B8</code>), DIDs and decoders by name</li>
+    <li>Selected by VIN prefix (WMI + model year) or picked manually</li>
+  </ul></div>
+</div>
+
+<h2 id="engine"><span class="n">6</span>Scan engine and progress</h2>
+<figure>{{svg:scan-state-machine}}<figcaption>Figure 3 — Scan lifecycle. Cancel or unplug at any time yields a partial report, never a lost one.</figcaption></figure>
+<h3>What the progress bar counts</h3>
+<p>The total <b>N</b> is fixed once planning finishes, so the counter only ever goes up: “k of N checks”. A check is one question to one module (e.g. “Engine ECU · stored fault codes”). The bar is segmented by result so the colour mix itself tells the story.</p>
+<table>
+  <tr><th>Result status</th><th>Meaning</th><th>Shown as</th></tr>
+  <tr><td><span class="pill p-run">Running</span></td><td>Request sent, waiting for reply</td><td>Pulsing zone on the car diagram</td></tr>
+  <tr><td><span class="pill p-ok">Reading received</span></td><td>Valid answer, nothing abnormal</td><td>Green</td></tr>
+  <tr><td><span class="pill p-warn">Fault reported</span></td><td>Codes present, MIL on, or value outside its normal range</td><td>Amber</td></tr>
+  <tr><td><span class="pill p-grey">Unsupported</span></td><td>Car says it doesn't support this (bitmap or <code>NO DATA</code> / negative response 0x11/0x12/0x31)</td><td>Grey, excluded from “coverage”</td></tr>
+  <tr><td><span class="pill p-bad">No response</span></td><td>Timed out after retries, or bus error — <i>we don't know</i></td><td>Red outline; never treated as “OK”</td></tr>
+  <tr><td><span class="pill p-man">Manual inspection</span></td><td>Can't be read electronically; pulled from the inspection log or flagged as to-do</td><td>Purple</td></tr>
+</table>
+<div class="callout amber">“ABS · no response” and “ABS · checked, 0 faults” are different outcomes and are always worded differently in the UI and the report.</div>
+<h3>Events emitted to the UI</h3>
+<pre><code>scan:planned   { total, checks: CheckPlan[] }
+check:start    { checkId, system, label, request, ecu }
+check:result   { checkId, status, value?, dtcs?, raw, durationMs }
+live:sample    { pid, value, unit, t }
+scan:done      { scanId, summary }        // also on cancel → partial: true
+scan:error     { stage, message, recoverable }</code></pre>
+<h3>Timing</h3>
+<p>Requests are sequential (the adapter handles one at a time). Default timeout 1 s for engine requests, 2 s for other modules, one retry, adaptive timing (<code>ATAT1</code>). A generic scan of ~40 checks should finish in under a minute on CAN; older K-line cars are slower and the ETA adapts from measured durations.</p>
+
+<h2 id="ui" class="pagebreak"><span class="n">7</span>Screens</h2>
+<h3>7.1 Connect</h3>
+<figure>{{svg:connect-screen}}<figcaption>Figure 4 — Two equal entry points: the real car via USB, or the demo car with selectable scenarios.</figcaption></figure>
+<h3>7.2 Scan in progress</h3>
+<figure>{{svg:scan-screen}}<figcaption>Figure 5 — The car diagram highlights the zone being queried; the counter, segmented bar, status chips and check list update per event; a live strip shows streaming readings.</figcaption></figure>
+<p><b>Car diagram zones:</b> engine bay, battery, four wheels (tyre + brake corner each), cabin (airbags, body), gearbox, rear (emissions/EVAP). Each zone takes the “worst” status of its checks. Zones with no checks for this car are drawn dashed with a short reason (“not in generic scan”). Clicking a zone filters the check list.</p>
+<h3>7.3 Report</h3>
+<figure>{{svg:report-screen}}<figcaption>Figure 6 — Summary tiles, fault detail with freeze frame and plain-English explanation, tyre panel mixing car data and gauge entries, and a per-system table that always names its source.</figcaption></figure>
+<h3>7.4 Other screens</h3>
+<ul>
+  <li><b>Live data</b>: pick up to 6 supported PIDs, streaming charts, record to file.</li>
+  <li><b>History</b>: list of saved scans per vehicle; <b>Compare</b> shows new / cleared codes and readiness changes between two scans.</li>
+  <li><b>Maintenance &amp; inspection</b>: service items with interval by distance and/or time (oil &amp; filter, air filter, cabin filter, brake fluid, spark plugs, timing belt), and inspection entries (pad mm, tread mm, tyre pressures, notes). Due items feed the report as <span class="pill p-man">Manual</span>.</li>
+  <li><b>Vehicles</b>: VIN, nickname, profile, recommended tyre pressures, odometer.</li>
+</ul>
+
+<h2 id="data"><span class="n">8</span>Data model and storage</h2>
+<p>All data is stored locally in IndexedDB. Each scan stores the raw request/response log alongside decoded results, so decoders can be improved and old scans re-decoded later.</p>
+<pre><code>Vehicle      { id, vin?, nickname, make?, model?, year?, profileId, tyreSpec?, odometerKm? }
+Scan         { id, vehicleId, startedAt, finishedAt, adapter, protocol, partial, summary }
+CheckResult  { scanId, checkId, system, label, source, status, value?, unit?, dtcs?, raw[], durationMs }
+Dtc          { code: "P0171", kind: stored|pending|permanent, ecu, description, freezeFrame? }
+LiveSession  { id, vehicleId, pids[], samples: [t, pid, value][] }
+ServiceItem  { id, vehicleId, kind, intervalKm?, intervalMonths?, lastDoneAt?, lastDoneKm? }
+Inspection   { id, vehicleId, at, kind, wheel?, valueMm?|valueBar?, note? }</code></pre>
+<p>Full field definitions and IndexedDB stores: <code>design/data-model.md</code>.</p>
+
+<h2 id="stack"><span class="n">9</span>Tech stack and repo layout</h2>
+<table>
+  <tr><th>Concern</th><th>Choice</th></tr>
+  <tr><td>Language / build</td><td>TypeScript (strict), Vite</td></tr>
+  <tr><td>UI</td><td>React, CSS modules, inline SVG for the car diagram</td></tr>
+  <tr><td>Charts</td><td>uPlot (small, fast for streaming)</td></tr>
+  <tr><td>Storage</td><td>IndexedDB via <code>idb</code></td></tr>
+  <tr><td>Hardware</td><td>Web Serial API (<code>navigator.serial</code>)</td></tr>
+  <tr><td>Tests</td><td>Vitest (unit, simulator-driven integration), Playwright (UI against demo car)</td></tr>
+  <tr><td>PDF export</td><td>Print stylesheet + <code>window.print()</code> to start</td></tr>
+  <tr><td>Hosting</td><td>Static site (GitHub Pages) — HTTPS satisfies Web Serial</td></tr>
+</table>
+<pre><code>car-diagnostic-analyser/
+├─ design.html · design.pdf · README.md
+├─ design/                  this design's detail docs + wireframes
+├─ src/
+│  ├─ transport/            ElmSerialTransport, SimulatorTransport
+│  ├─ protocol/             obd2/, uds/, isotp, dtc, pid decoders
+│  ├─ guard/                ReadOnlyGuard + allowlist
+│  ├─ scan/                 discovery, planner, runner, events
+│  ├─ profiles/             generic-obd2.json, vehicles/*.json
+│  ├─ data/                 IndexedDB repositories
+│  └─ ui/                   screens/, car-diagram/, components/
+├─ sim/scenarios/           demo-car and test scenarios (*.json)
+└─ tests/</code></pre>
+
+<h2 id="testing"><span class="n">10</span>Testing and the demo car</h2>
+<ul>
+  <li><b>Decoders</b>: table-driven unit tests from published PID formulas and real captured replies.</li>
+  <li><b>Guard</b>: every blocked service has a test proving it never reaches the transport.</li>
+  <li><b>Simulator scenarios</b>: JSON that maps requests to replies with latency and failure injection. The same files drive tests and the demo car. Scenarios: healthy car, lean engine + low tyre + brake check due, ABS offline, old K-line car, flaky adapter (random <code>NO DATA</code>, mid-scan disconnect).</li>
+  <li><b>Replay</b>: every real scan's raw log can be turned into a scenario, so bugs found in the car become regression tests.</li>
+  <li><b>On the car</b>: first real test only after the simulator suite passes; parked, ignition on, engine off, then at idle.</li>
+</ul>
+
+<h2 id="roadmap"><span class="n">11</span>Roadmap</h2>
+<p>Start with the basics on one car and one adapter, then extend one system at a time. Each phase ends with something demoable. Acceptance criteria per phase are in <code>design/roadmap.md</code>.</p>
+<div class="phase"><b>Phase 1</b><span>Project skeleton, SimulatorTransport, scan engine with a fake plan, progress UI</span></div>
+<div class="phase"><b>Phase 2</b><span>ElmSerialTransport over Web Serial; adapter init and identification (<code>ATI</code>, <code>ATRV</code>); ReadOnlyGuard</span></div>
+<div class="phase"><b>Phase 3</b><span>Discovery: protocol, VIN, supported-PID bitmaps, battery voltage</span></div>
+<div class="phase"><b>Phase 4</b><span>Engine fault codes: stored, pending, permanent; DTC descriptions</span></div>
+<div class="phase"><b>Phase 5</b><span>Check-engine light and readiness monitors</span></div>
+<div class="phase"><b>Phase 6</b><span>Freeze-frame data for stored codes</span></div>
+<div class="phase"><b>Phase 7</b><span>Live data gauges and charts</span></div>
+<div class="phase"><b>Phase 8</b><span>Animated car diagram during the scan — <b>first release (v0.1)</b></span></div>
+<div class="phase"><b>Phase 9</b><span>Save scans to IndexedDB, history list</span></div>
+<div class="phase"><b>Phase 10</b><span>Compare two scans</span></div>
+<div class="phase"><b>Phase 11</b><span>Export report (print/PDF)</span></div>
+<div class="phase"><b>Phase 12</b><span>Maintenance &amp; inspection log feeding the report</span></div>
+<div class="phase"><b>Phase 13</b><span>Vehicle profile system; first profile for one make/model/year</span></div>
+<div class="phase"><b>Phase 14</b><span>ABS module fault codes via the profile</span></div>
+<div class="phase"><b>Phase 15</b><span>Per-wheel tyre pressures where the car exposes them</span></div>
+<div class="phase"><b>Phase 16</b><span>Oil-life / service-due data where supported</span></div>
+
+<h2 id="risks"><span class="n">12</span>Risks and open questions</h2>
+<table>
+  <tr><th>Risk</th><th>Mitigation</th></tr>
+  <tr><td>Clone ELM327 adapters with buggy firmware or wrong baud</td><td>Recommend an STN-based adapter; baud auto-probe; tolerant parser; “flaky adapter” scenario in tests</td></tr>
+  <tr><td>Manufacturer data (ABS, TPMS, oil life) is undocumented</td><td>Profiles are data files; start with one car you own; label everything by source</td></tr>
+  <tr><td>Newer cars block diagnostics behind a security gateway</td><td>Generic OBD-II reads usually still work; show “module not reachable” honestly</td></tr>
+  <tr><td>Users read the report as a safety certificate</td><td>Wording and manual-inspection items make clear what was <i>not</i> checked</td></tr>
+  <tr><td>Web Serial is Chromium-desktop only</td><td>Detect and explain on unsupported browsers; demo car still works everywhere</td></tr>
+  <tr><td>Adapter left plugged in drains the battery</td><td>Reminder on scan finish</td></tr>
+</table>
+<h3>Open questions</h3>
+<ul>
+  <li>Which car is the first target for an enhanced profile (make, model, year, TPMS type)?</li>
+  <li>Which adapter to buy first — OBDLink EX, or reuse an existing ELM327?</li>
+  <li>DTC description source: a bundled generic P0xxx list is easy; manufacturer-specific codes need per-profile tables.</li>
+  <li>Units: metric by default (°C, bar, km) with a setting for psi / miles?</li>
+</ul>
+
+</main>
+</body>
+</html>

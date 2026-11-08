@@ -205,12 +205,17 @@ scan:error     { stage, message, recoverable }</code></pre>
 <p><b>Car diagram zones:</b> engine bay, battery, four wheels (tyre + brake corner each), cabin (airbags, body), gearbox, rear (emissions/EVAP). Each zone takes the “worst” status of its checks. Zones with no checks for this car are drawn dashed with a short reason (“not in generic scan”). Clicking a zone filters the check list.</p>
 <h3>7.3 Report</h3>
 <figure>{{svg:report-screen}}<figcaption>Figure 6 — Summary tiles, fault detail with freeze frame and plain-English explanation, tyre panel mixing car data and gauge entries, and a per-system table that always names its source.</figcaption></figure>
-<h3>7.4 Other screens</h3>
+<h3>7.4 Live data</h3>
+<figure>{{svg:live-screen}}<figcaption>Figure 7 — Pick up to six supported readings; each gets a 60-second chart with its current value and normal range. Out-of-range readings (here long-term fuel trim) are highlighted. Record writes the samples to CSV.</figcaption></figure>
+<p>Only PIDs the car reported as supported are offered. On CAN cars several PIDs are requested in one message to keep the sample rate up; the rate is shown in the top bar so a slow adapter is obvious.</p>
+<h3>7.5 History and compare</h3>
+<figure>{{svg:history-compare-screen}}<figcaption>Figure 8 — Saved scans per vehicle (partial scans are marked). Tick two to compare: fault codes new / still present / gone, readiness changes and key value deltas, with a one-line summary.</figcaption></figure>
+<h3>7.6 Maintenance and inspection</h3>
+<figure>{{svg:maintenance-screen}}<figcaption>Figure 9 — Service items tracked by distance and/or time from the owner's manual, and a quick inspection form for tyre pressures, tread, pads and oil level. Due, unknown and recent items feed every scan report as Manual inspection rows.</figcaption></figure>
+<h3>7.7 Vehicles and settings</h3>
 <ul>
-  <li><b>Live data</b>: pick up to 6 supported PIDs, streaming charts, record to file.</li>
-  <li><b>History</b>: list of saved scans per vehicle; <b>Compare</b> shows new / cleared codes and readiness changes between two scans.</li>
-  <li><b>Maintenance &amp; inspection</b>: service items with interval by distance and/or time (oil &amp; filter, air filter, cabin filter, brake fluid, spark plugs, timing belt), and inspection entries (pad mm, tread mm, tyre pressures, notes). Due items feed the report as <span class="pill p-man">Manual</span>.</li>
-  <li><b>Vehicles</b>: VIN, nickname, profile, recommended tyre pressures, odometer.</li>
+  <li><b>Vehicles</b>: VIN, nickname, profile, recommended tyre pressures (from the door-pillar sticker), odometer.</li>
+  <li><b>Settings</b>: units (°C / bar / km by default, psi and miles optional), preferred adapter baud rate, VIN masking in exports, JSON backup / restore.</li>
 </ul>
 
 <h2 id="data"><span class="n">8</span>Data model and storage</h2>

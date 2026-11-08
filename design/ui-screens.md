@@ -50,16 +50,16 @@ Zone states: pending (grey), running (blue outline + soft pulse), ok, fault, no 
 5. Not checked: explicit list of systems not covered for this car.
 6. Actions: Export PDF (print stylesheet), Compare…, Save as test scenario.
 
-## 4. Live
+## 4. Live — [live-screen.svg](wireframes/live-screen.svg)
 
 Pick up to 6 supported PIDs → uPlot charts with 60 s window, min/max/current, pause, record to CSV.
 
-## 5. History & Compare
+## 5. History & Compare — [history-compare-screen.svg](wireframes/history-compare-screen.svg)
 
 - Per vehicle, newest first: date, coverage, faults count, partial flag.
 - Compare two scans: DTCs new / still present / gone; readiness changes; key value deltas (battery V, LTFT).
 
-## 6. Maintenance & inspection
+## 6. Maintenance & inspection — [maintenance-screen.svg](wireframes/maintenance-screen.svg)
 
 - Service items with interval (km and/or months), last done, next due, status (ok / soon / due).
 - "Log inspection" quick form: tyre pressures (4 inputs), tread depth, pad thickness, oil level, note.

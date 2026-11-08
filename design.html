@@ -529,12 +529,277 @@ scan:error     { stage, message, recoverable }</code></pre>
     <text x="32" y="578" fill="#e6edf3">Oil &amp; filters</text><text x="200" y="578" fill="#7ee08f">✓ Within interval</text><text x="420" y="578" fill="#c4ccd4">Oil + filter 4,100 km ago · air filter due in 9,000 km</text><text x="928" y="578" fill="#8b98a5" text-anchor="end">your log</text>
   </g>
 </svg><figcaption>Figure 6 — Summary tiles, fault detail with freeze frame and plain-English explanation, tyre panel mixing car data and gauge entries, and a per-system table that always names its source.</figcaption></figure>
-<h3>7.4 Other screens</h3>
+<h3>7.4 Live data</h3>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="Segoe UI, Helvetica, Arial, sans-serif" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpiZjYzZWUxMy05YmQ1LTQxMDUtOTVjOC03MDA0MzkzNmU5ZmYAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaLpBtQu3gbC3cYiRp4FNdDsAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo2ZGM2NmU4NS1iOTUzLTQzN2QtYTk5OC04OTg1ZjVhZmZiOThscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoKcuBgfiD3n7O/GfLlWQuPgAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggdxuKTZy2X/PP/Y9TNgcJZJoNhQzCXTT4mMb3x+04nMWkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaEQjich2r2md8N1gd+kdnkUAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCBRVH8p11IrdhSZ0v3dw3uH34b4sLEEngAPUr8scCig02RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiyZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmJmNjNlZTEzLTliZDUtNDEwNS05NWM4LTcwMDQzOTM2ZTlmZi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmRjMzU4NmUxLTVlODQtNGE3My1iZWRjLTY1Y2E2ZDc4YjNmN3JjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCB3G4pNnLZf88/9j1M2Bwlkmg2FDMJdNPiYxvfH7TicxaJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggM+CFgB4PJs9uRKJz3UK+NDwImB1Z7zYGbe+6mejyfOmiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgg71axenVpl32oHDVOQKiOMC3k3MJB1rYJpzi9qlBbqzd0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQOJxnggn+viosUyquBmInzls3vOl7Swoyo8n7QgyXIwcy4G3WHz6ErEuaxoCnPuf7YYsG5ZYxBh7ikDC5DFyYlY=</c2pa:manifest></metadata>
+<rect width="960" height="600" rx="10" fill="#0f1419"/>
+<rect width="960" height="48" rx="10" fill="#151c23"/><rect y="38" width="960" height="10" fill="#151c23"/>
+<text x="20" y="30" font-size="15" font-weight="700" fill="#e6edf3">car-diagnostic-analyser</text>
+<text x="250" y="30" font-size="12" fill="#8b98a5">Live data · 2008 VW Golf 1.6 · engine idling</text>
+<rect x="600" y="13" width="120" height="24" rx="12" fill="#12261a" stroke="#2f6b3e"/><circle cx="616" cy="25" r="5" fill="#3fb950"/><text x="628" y="29" font-size="11" fill="#b7e4c1">7.8 samples/s</text>
+<rect x="730" y="12" width="64" height="26" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="762" y="29" text-anchor="middle" font-size="12" fill="#e6edf3">Pause</text>
+<rect x="802" y="12" width="142" height="26" rx="6" fill="#2a1416" stroke="#6e2a2e"/><circle cx="818" cy="25" r="5" fill="#f85149"/><text x="882" y="29" text-anchor="middle" font-size="12" fill="#ff9b95">Record CSV · 00:42</text>
+<rect x="16" y="62" width="220" height="522" rx="10" fill="#151c23" stroke="#24303b"/>
+<text x="32" y="88" font-size="13" font-weight="700" fill="#e6edf3">Readings</text><text x="220" y="88" font-size="11" fill="#8b98a5" text-anchor="end">6 of 6</text>
+<rect x="32" y="98" width="188" height="26" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="42" y="115" font-size="11" fill="#6e7681">Search 24 supported…</text>
+<rect x="32" y="134" width="14" height="14" rx="3" fill="#1f6feb"/><text x="39" y="145" text-anchor="middle" font-size="10" fill="#fff">✓</text><text x="56" y="146" font-size="12" fill="#e6edf3">Engine speed</text>
+<rect x="32" y="162" width="14" height="14" rx="3" fill="#1f6feb"/><text x="39" y="173" text-anchor="middle" font-size="10" fill="#fff">✓</text><text x="56" y="174" font-size="12" fill="#e6edf3">Coolant temp</text>
+<rect x="32" y="190" width="14" height="14" rx="3" fill="#1f6feb"/><text x="39" y="201" text-anchor="middle" font-size="10" fill="#fff">✓</text><text x="56" y="202" font-size="12" fill="#e6edf3">Short-term trim B1</text>
+<rect x="32" y="218" width="14" height="14" rx="3" fill="#1f6feb"/><text x="39" y="229" text-anchor="middle" font-size="10" fill="#fff">✓</text><text x="56" y="230" font-size="12" fill="#e6edf3">Long-term trim B1</text>
+<rect x="32" y="246" width="14" height="14" rx="3" fill="#1f6feb"/><text x="39" y="257" text-anchor="middle" font-size="10" fill="#fff">✓</text><text x="56" y="258" font-size="12" fill="#e6edf3">MAF air flow</text>
+<rect x="32" y="274" width="14" height="14" rx="3" fill="#1f6feb"/><text x="39" y="285" text-anchor="middle" font-size="10" fill="#fff">✓</text><text x="56" y="286" font-size="12" fill="#e6edf3">Battery voltage</text>
+<rect x="32" y="302" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="314" font-size="12" fill="#8b98a5">Vehicle speed</text>
+<rect x="32" y="330" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="342" font-size="12" fill="#8b98a5">Engine load</text>
+<rect x="32" y="358" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="370" font-size="12" fill="#8b98a5">Intake air temp</text>
+<rect x="32" y="386" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="398" font-size="12" fill="#8b98a5">Throttle position</text>
+<rect x="32" y="414" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="426" font-size="12" fill="#8b98a5">Timing advance</text>
+<rect x="32" y="442" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="454" font-size="12" fill="#8b98a5">Intake pressure</text>
+<rect x="32" y="470" width="14" height="14" rx="3" fill="none" stroke="#3a4552"/><text x="56" y="482" font-size="12" fill="#8b98a5">Fuel level</text>
+<text x="32" y="516" font-size="11" fill="#6e7681">+ 11 more · 4 unsupported hidden</text>
+<text x="32" y="566" font-size="10" fill="#8b98a5">Max 6 at once keeps the rate up</text>
+<rect x="252" y="62" width="332" height="166" rx="10" fill="#151c23" stroke="#24303b"/>
+<text x="268" y="86" font-size="11" fill="#8b98a5">ENGINE SPEED</text>
+<text x="568" y="86" font-size="10" fill="#6e7681" text-anchor="end">750–850 idle</text>
+<text x="268" y="118" font-size="26" font-weight="700" fill="#e6edf3">812<tspan font-size="13" fill="#8b98a5" font-weight="400"> rpm</tspan></text>
+<line x1="268" y1="132.0" x2="568" y2="132.0" stroke="#1f2a35"/>
+<line x1="268" y1="156.7" x2="568" y2="156.7" stroke="#1f2a35"/>
+<line x1="268" y1="181.3" x2="568" y2="181.3" stroke="#1f2a35"/>
+<line x1="268" y1="206.0" x2="568" y2="206.0" stroke="#1f2a35"/>
+<polyline points="268.0,175.3 273.1,173.0 278.2,168.4 283.3,168.7 288.3,169.3 293.4,168.4 298.5,167.3 303.6,171.4 308.7,174.8 313.8,181.3 318.8,180.4 323.9,182.2 329.0,181.5 334.1,179.3 339.2,175.3 344.3,167.1 349.4,165.2 354.4,164.0 359.5,164.1 364.6,169.9 369.7,171.7 374.8,172.7 379.9,175.2 384.9,176.8 390.0,178.0 395.1,183.5 400.2,178.3 405.3,175.2 410.4,173.1 415.5,172.3 420.5,167.7 425.6,169.1 430.7,163.2 435.8,165.2 440.9,170.2 446.0,175.2 451.1,174.0 456.1,178.9 461.2,178.0 466.3,178.1 471.4,178.9 476.5,176.9 481.6,172.4 486.6,170.4 491.7,169.8 496.8,167.5 501.9,164.1 507.0,171.2 512.1,173.8 517.2,173.0 522.2,178.6 527.3,179.3 532.4,180.9 537.5,181.7 542.6,175.4 547.7,178.4 552.7,173.6 557.8,171.9 562.9,166.4 568.0,167.7" fill="none" stroke="#58a6ff" stroke-width="1.8"/>
+<text x="268" y="220" font-size="9" fill="#6e7681">−60 s</text><text x="568" y="220" font-size="9" fill="#6e7681" text-anchor="end">now</text>
+<text x="418.0" y="220" font-size="9" fill="#6e7681" text-anchor="middle">scale 700–950 rpm</text>
+<rect x="600" y="62" width="332" height="166" rx="10" fill="#151c23" stroke="#24303b"/>
+<text x="616" y="86" font-size="11" fill="#8b98a5">COOLANT</text>
+<text x="916" y="86" font-size="10" fill="#6e7681" text-anchor="end">normal 80–105</text>
+<text x="616" y="118" font-size="26" font-weight="700" fill="#e6edf3">88<tspan font-size="13" fill="#8b98a5" font-weight="400"> °C</tspan></text>
+<line x1="616" y1="132.0" x2="916" y2="132.0" stroke="#1f2a35"/>
+<line x1="616" y1="156.7" x2="916" y2="156.7" stroke="#1f2a35"/>
+<line x1="616" y1="181.3" x2="916" y2="181.3" stroke="#1f2a35"/>
+<line x1="616" y1="206.0" x2="916" y2="206.0" stroke="#1f2a35"/>
+<polyline points="616.0,176.5 621.1,175.6 626.2,175.4 631.3,174.6 636.3,173.7 641.4,174.0 646.5,173.6 651.6,172.9 656.7,171.9 661.8,171.7 666.8,171.6 671.9,171.1 677.0,170.9 682.1,170.3 687.2,170.3 692.3,169.3 697.4,168.8 702.4,168.4 707.5,168.4 712.6,167.9 717.7,168.5 722.8,168.0 727.9,167.1 732.9,167.0 738.0,167.1 743.1,166.4 748.2,166.5 753.3,166.1 758.4,166.4 763.5,166.3 768.5,165.9 773.6,166.0 778.7,165.6 783.8,164.9 788.9,165.4 794.0,165.5 799.1,165.4 804.1,165.1 809.2,164.4 814.3,164.6 819.4,164.6 824.5,164.7 829.6,163.7 834.6,164.1 839.7,164.3 844.8,164.3 849.9,164.2 855.0,164.0 860.1,163.4 865.2,163.9 870.2,163.9 875.3,163.4 880.4,163.5 885.5,162.7 890.6,163.5 895.7,163.1 900.7,162.8 905.8,163.1 910.9,162.4 916.0,162.9" fill="none" stroke="#3fb950" stroke-width="1.8"/>
+<text x="616" y="220" font-size="9" fill="#6e7681">−60 s</text><text x="916" y="220" font-size="9" fill="#6e7681" text-anchor="end">now</text>
+<text x="766.0" y="220" font-size="9" fill="#6e7681" text-anchor="middle">scale 70–100 °C</text>
+<rect x="252" y="240" width="332" height="166" rx="10" fill="#151c23" stroke="#24303b"/>
+<text x="268" y="264" font-size="11" fill="#8b98a5">SHORT-TERM TRIM B1</text>
+<text x="568" y="264" font-size="10" fill="#6e7681" text-anchor="end">±10 normal</text>
+<text x="268" y="296" font-size="26" font-weight="700" fill="#e6edf3">+3.1<tspan font-size="13" fill="#8b98a5" font-weight="400"> %</tspan></text>
+<line x1="268" y1="310.0" x2="568" y2="310.0" stroke="#1f2a35"/>
+<line x1="268" y1="334.7" x2="568" y2="334.7" stroke="#1f2a35"/>
+<line x1="268" y1="359.3" x2="568" y2="359.3" stroke="#1f2a35"/>
+<line x1="268" y1="384.0" x2="568" y2="384.0" stroke="#1f2a35"/>
+<polyline points="268.0,344.1 273.1,336.4 278.2,336.5 283.3,338.1 288.3,346.3 293.4,348.2 298.5,348.8 303.6,345.5 308.7,340.9 313.8,335.3 318.8,337.0 323.9,343.6 329.0,350.4 334.1,349.2 339.2,350.2 344.3,343.6 349.4,332.4 354.4,333.7 359.5,336.1 364.6,346.9 369.7,348.7 374.8,349.1 379.9,342.2 384.9,335.4 390.0,333.7 395.1,339.0 400.2,345.2 405.3,347.6 410.4,348.8 415.5,344.2 420.5,340.3 425.6,333.3 430.7,333.0 435.8,339.7 440.9,345.9 446.0,351.2 451.1,348.1 456.1,341.2 461.2,337.1 466.3,331.3 471.4,335.2 476.5,347.6 481.6,347.8 486.6,347.9 491.7,344.2 496.8,340.6 501.9,331.4 507.0,337.9 512.1,339.4 517.2,348.0 522.2,354.0 527.3,349.8 532.4,339.8 537.5,334.4 542.6,332.7 547.7,336.8 552.7,348.3 557.8,354.1 562.9,347.4 568.0,346.5" fill="none" stroke="#58a6ff" stroke-width="1.8"/>
+<text x="268" y="398" font-size="9" fill="#6e7681">−60 s</text><text x="568" y="398" font-size="9" fill="#6e7681" text-anchor="end">now</text>
+<text x="418.0" y="398" font-size="9" fill="#6e7681" text-anchor="middle">scale -25–25 %</text>
+<rect x="600" y="240" width="332" height="166" rx="10" fill="#151c23" stroke="#5c4716"/>
+<text x="616" y="264" font-size="11" fill="#8b98a5">LONG-TERM TRIM B1</text>
+<text x="916" y="264" font-size="10" fill="#e3b341" text-anchor="end">⚠ above +10</text>
+<text x="616" y="296" font-size="26" font-weight="700" fill="#ffd57a">+14.1<tspan font-size="13" fill="#8b98a5" font-weight="400"> %</tspan></text>
+<line x1="616" y1="310.0" x2="916" y2="310.0" stroke="#1f2a35"/>
+<line x1="616" y1="334.7" x2="916" y2="334.7" stroke="#1f2a35"/>
+<line x1="616" y1="359.3" x2="916" y2="359.3" stroke="#1f2a35"/>
+<line x1="616" y1="384.0" x2="916" y2="384.0" stroke="#1f2a35"/>
+<polyline points="616.0,325.9 621.1,326.6 626.2,326.0 631.3,326.0 636.3,325.9 641.4,326.2 646.5,325.9 651.6,326.5 656.7,326.1 661.8,326.4 666.8,325.9 671.9,326.0 677.0,326.3 682.1,326.3 687.2,326.7 692.3,326.7 697.4,326.2 702.4,326.3 707.5,326.0 712.6,326.2 717.7,326.6 722.8,326.4 727.9,326.0 732.9,326.3 738.0,326.7 743.1,326.0 748.2,326.0 753.3,326.6 758.4,326.2 763.5,326.4 768.5,326.0 773.6,326.4 778.7,326.5 783.8,326.3 788.9,325.9 794.0,326.6 799.1,326.6 804.1,326.2 809.2,325.9 814.3,326.3 819.4,326.3 824.5,326.0 829.6,326.0 834.6,326.7 839.7,325.9 844.8,326.6 849.9,326.5 855.0,326.0 860.1,326.3 865.2,326.0 870.2,326.6 875.3,325.9 880.4,326.6 885.5,326.6 890.6,326.3 895.7,326.4 900.7,326.2 905.8,325.9 910.9,326.1 916.0,326.7" fill="none" stroke="#d29922" stroke-width="1.8"/>
+<text x="616" y="398" font-size="9" fill="#6e7681">−60 s</text><text x="916" y="398" font-size="9" fill="#6e7681" text-anchor="end">now</text>
+<text x="766.0" y="398" font-size="9" fill="#6e7681" text-anchor="middle">scale -25–25 %</text>
+<rect x="252" y="418" width="332" height="166" rx="10" fill="#151c23" stroke="#24303b"/>
+<text x="268" y="442" font-size="11" fill="#8b98a5">MAF AIR FLOW</text>
+<text x="568" y="442" font-size="10" fill="#6e7681" text-anchor="end">idle 2–4</text>
+<text x="268" y="474" font-size="26" font-weight="700" fill="#e6edf3">3.2<tspan font-size="13" fill="#8b98a5" font-weight="400"> g/s</tspan></text>
+<line x1="268" y1="488.0" x2="568" y2="488.0" stroke="#1f2a35"/>
+<line x1="268" y1="512.7" x2="568" y2="512.7" stroke="#1f2a35"/>
+<line x1="268" y1="537.3" x2="568" y2="537.3" stroke="#1f2a35"/>
+<line x1="268" y1="562.0" x2="568" y2="562.0" stroke="#1f2a35"/>
+<polyline points="268.0,532.7 273.1,531.1 278.2,530.3 283.3,529.3 288.3,529.7 293.4,531.0 298.5,531.7 303.6,531.8 308.7,533.9 313.8,534.1 318.8,534.2 323.9,534.9 329.0,534.2 334.1,533.4 339.2,532.7 344.3,530.4 349.4,530.3 354.4,528.9 359.5,530.1 364.6,529.6 369.7,530.7 374.8,532.3 379.9,533.8 384.9,535.3 390.0,534.6 395.1,535.3 400.2,534.2 405.3,534.2 410.4,533.1 415.5,531.8 420.5,529.6 425.6,530.3 430.7,529.0 435.8,530.5 440.9,531.2 446.0,532.8 451.1,533.5 456.1,535.4 461.2,535.3 466.3,534.3 471.4,535.1 476.5,533.2 481.6,532.6 486.6,531.4 491.7,531.0 496.8,530.6 501.9,528.9 507.0,529.7 512.1,530.8 517.2,532.0 522.2,532.9 527.3,535.3 532.4,535.0 537.5,535.1 542.6,534.3 547.7,532.6 552.7,531.7 557.8,530.2 562.9,530.8 568.0,529.4" fill="none" stroke="#58a6ff" stroke-width="1.8"/>
+<text x="268" y="576" font-size="9" fill="#6e7681">−60 s</text><text x="568" y="576" font-size="9" fill="#6e7681" text-anchor="end">now</text>
+<text x="418.0" y="576" font-size="9" fill="#6e7681" text-anchor="middle">scale 0–8 g/s</text>
+<rect x="600" y="418" width="332" height="166" rx="10" fill="#151c23" stroke="#24303b"/>
+<text x="616" y="442" font-size="11" fill="#8b98a5">BATTERY</text>
+<text x="916" y="442" font-size="10" fill="#6e7681" text-anchor="end">charging 13.8–14.7</text>
+<text x="616" y="474" font-size="26" font-weight="700" fill="#e6edf3">14.1<tspan font-size="13" fill="#8b98a5" font-weight="400"> V</tspan></text>
+<line x1="616" y1="488.0" x2="916" y2="488.0" stroke="#1f2a35"/>
+<line x1="616" y1="512.7" x2="916" y2="512.7" stroke="#1f2a35"/>
+<line x1="616" y1="537.3" x2="916" y2="537.3" stroke="#1f2a35"/>
+<line x1="616" y1="562.0" x2="916" y2="562.0" stroke="#1f2a35"/>
+<polyline points="616.0,504.3 621.1,504.2 626.2,504.4 631.3,504.0 636.3,505.0 641.4,503.9 646.5,504.8 651.6,504.5 656.7,503.9 661.8,504.3 666.8,505.0 671.9,505.1 677.0,505.0 682.1,504.4 687.2,503.7 692.3,503.9 697.4,504.8 702.4,504.8 707.5,504.1 712.6,505.1 717.7,504.8 722.8,505.6 727.9,505.2 732.9,504.6 738.0,504.3 743.1,504.4 748.2,504.9 753.3,503.8 758.4,504.4 763.5,505.3 768.5,505.4 773.6,503.8 778.7,503.7 783.8,503.9 788.9,504.5 794.0,505.0 799.1,505.4 804.1,505.1 809.2,505.2 814.3,503.9 819.4,503.9 824.5,504.1 829.6,505.3 834.6,505.1 839.7,505.0 844.8,503.8 849.9,505.3 855.0,504.1 860.1,504.3 865.2,504.6 870.2,503.8 875.3,505.1 880.4,504.6 885.5,505.3 890.6,505.4 895.7,505.5 900.7,505.0 905.8,505.3 910.9,505.5 916.0,503.7" fill="none" stroke="#3fb950" stroke-width="1.8"/>
+<text x="616" y="576" font-size="9" fill="#6e7681">−60 s</text><text x="916" y="576" font-size="9" fill="#6e7681" text-anchor="end">now</text>
+<text x="766.0" y="576" font-size="9" fill="#6e7681" text-anchor="middle">scale 11–15 V</text>
+</svg><figcaption>Figure 7 — Pick up to six supported readings; each gets a 60-second chart with its current value and normal range. Out-of-range readings (here long-term fuel trim) are highlighted. Record writes the samples to CSV.</figcaption></figure>
+<p>Only PIDs the car reported as supported are offered. On CAN cars several PIDs are requested in one message to keep the sample rate up; the rate is shown in the top bar so a slow adapter is obvious.</p>
+<h3>7.5 History and compare</h3>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="Segoe UI, Helvetica, Arial, sans-serif" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo3OTNlNTNhOC02YzUyLTRiMzItYTI1Ny0wZGFjNzIzYTY5NTkAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaJoT9RM85R9IzJlngFxje94AAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpiN2VjMDBhMS01ZTVlLTRmOWItYTkzYS04ZTg0Zjk2NTlmMDhscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoNc5nhWisz3Ga4ZnMLHM4kQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggWbQuMKhIHwJYzsbow0/sobgqV2UrrBchVJlKRTdsArekZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaAsI84Ka7iYcLpnpuM2tFj0AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCBYI+c6m1XWoKpUE296OQr35z6JSn3WJyWZE9eU5xxrn2RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiyZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjc5M2U1M2E4LTZjNTItNGIzMi1hMjU3LTBkYWM3MjNhNjk1OS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjQ5M2NmYzUwLTBjMzQtNGFjZS05MjJjLTJhODY4MjRhOTdjZXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBZtC4wqEgfAljOxujDT+yhuCpXZSusFyFUmUpFN2wCt6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggWIQ2ZovRjigbSXg0m2swyImOyGxQDRTD8UnOlplYDyqiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggOUl9394UQqnzdMpjyYD/HH3VDPnyFlbCyTyHyTJ6LIF0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQJcGjc3zISDOpc21R7i80VwsmfrtcEf+pko3q4xvTgi85cnFoCc8dZ/N8Yf0DaGLPBiNL5Zzsce9/I/kPHPeyto=</c2pa:manifest></metadata>
+  <rect width="960" height="600" rx="10" fill="#0f1419"/>
+  <rect width="960" height="48" rx="10" fill="#151c23"/><rect y="38" width="960" height="10" fill="#151c23"/>
+  <text x="20" y="30" font-size="15" font-weight="700" fill="#e6edf3">car-diagnostic-analyser</text>
+  <text x="250" y="30" font-size="12" fill="#8b98a5">History · 2008 VW Golf 1.6 · 5 scans</text>
+  <rect x="844" y="12" width="100" height="26" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="894" y="29" text-anchor="middle" font-size="12" fill="#e6edf3">Export JSON</text>
+
+  <!-- scan list -->
+  <rect x="16" y="62" width="300" height="522" rx="10" fill="#151c23" stroke="#24303b"/>
+  <text x="32" y="88" font-size="13" font-weight="700" fill="#e6edf3">Scans</text>
+  <text x="300" y="88" font-size="11" fill="#8b98a5" text-anchor="end">tick two to compare</text>
+  <g font-size="12">
+    <!-- row 1 selected B -->
+    <rect x="28" y="102" width="276" height="70" rx="8" fill="#13314f" stroke="#58a6ff"/>
+    <rect x="40" y="114" width="20" height="18" rx="4" fill="#1f6feb"/><text x="50" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">B</text>
+    <text x="70" y="128" fill="#e6edf3" font-weight="600">8 Nov 2026 · 13:52</text>
+    <text x="70" y="148" fill="#e3b341" font-size="11">⚠ 2 faults</text><text x="140" y="148" fill="#8b98a5" font-size="11">36/41 answered · 6/7 ready</text>
+    <text x="70" y="164" fill="#6e7681" font-size="10">OBDLink EX · 1m 22s</text>
+    <!-- row 2 selected A -->
+    <rect x="28" y="180" width="276" height="70" rx="8" fill="#1a2532" stroke="#58a6ff" stroke-dasharray="4 3"/>
+    <rect x="40" y="192" width="20" height="18" rx="4" fill="#1f6feb"/><text x="50" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">A</text>
+    <text x="70" y="206" fill="#e6edf3" font-weight="600">2 Nov 2026 · 10:15</text>
+    <text x="70" y="226" fill="#e3b341" font-size="11">⚠ 2 faults</text><text x="140" y="226" fill="#8b98a5" font-size="11">35/41 answered · 5/7 ready</text>
+    <text x="70" y="242" fill="#6e7681" font-size="10">OBDLink EX · 1m 30s</text>
+    <!-- row 3 -->
+    <rect x="28" y="258" width="276" height="70" rx="8" fill="#1a232d" stroke="#24303b"/>
+    <rect x="40" y="270" width="20" height="18" rx="4" fill="none" stroke="#3a4552"/>
+    <text x="70" y="284" fill="#e6edf3" font-weight="600">19 Oct 2026 · 16:40</text>
+    <text x="70" y="304" fill="#7ee08f" font-size="11">✓ no faults</text><text x="140" y="304" fill="#8b98a5" font-size="11">35/41 answered · 7/7 ready</text>
+    <text x="70" y="320" fill="#6e7681" font-size="10">OBDLink EX · 1m 18s</text>
+    <!-- row 4 partial -->
+    <rect x="28" y="336" width="276" height="70" rx="8" fill="#1a232d" stroke="#24303b"/>
+    <rect x="40" y="348" width="20" height="18" rx="4" fill="none" stroke="#3a4552"/>
+    <text x="70" y="362" fill="#e6edf3" font-weight="600">19 Oct 2026 · 16:31</text>
+    <rect x="200" y="350" width="54" height="16" rx="8" fill="#1f242a"/><text x="227" y="362" text-anchor="middle" font-size="9" fill="#8b98a5">PARTIAL</text>
+    <text x="70" y="382" fill="#ff9b95" font-size="11">✕ disconnected at 14/41</text>
+    <text x="70" y="398" fill="#6e7681" font-size="10">ELM327 clone · cable unplugged</text>
+    <!-- row 5 demo -->
+    <rect x="28" y="414" width="276" height="70" rx="8" fill="#1a232d" stroke="#24303b"/>
+    <rect x="40" y="426" width="20" height="18" rx="4" fill="none" stroke="#3a4552"/>
+    <text x="70" y="440" fill="#e6edf3" font-weight="600">12 Oct 2026 · 09:05</text>
+    <text x="70" y="460" fill="#7ee08f" font-size="11">✓ no faults</text><text x="140" y="460" fill="#8b98a5" font-size="11">34/41 answered · 7/7 ready</text>
+    <text x="70" y="476" fill="#6e7681" font-size="10">OBDLink EX · first scan</text>
+  </g>
+  <text x="32" y="568" font-size="10" fill="#6e7681">Stored locally in this browser (IndexedDB)</text>
+
+  <!-- compare panel -->
+  <rect x="332" y="62" width="612" height="522" rx="10" fill="#151c23" stroke="#24303b"/>
+  <text x="348" y="90" font-size="16" font-weight="700" fill="#e6edf3">Compare  A  2 Nov  →  B  8 Nov</text>
+  <text x="928" y="90" font-size="11" fill="#8b98a5" text-anchor="end">6 days · +412 km</text>
+
+  <text x="348" y="122" font-size="11" fill="#8b98a5">FAULT CODES</text>
+  <g font-size="12">
+    <rect x="348" y="132" width="580" height="30" rx="6" fill="#2b2210"/>
+    <text x="360" y="152" fill="#e3b341" font-weight="600">STILL PRESENT</text><text x="470" y="152" fill="#ffd57a" font-weight="600">P0171</text><text x="528" y="152" fill="#c9ad6a">System too lean (bank 1) · pending → stored · Engine 7E8</text>
+    <rect x="348" y="168" width="580" height="30" rx="6" fill="#12261a"/>
+    <text x="360" y="188" fill="#7ee08f" font-weight="600">GONE</text><text x="470" y="188" fill="#b7e4c1" font-weight="600">P0420</text><text x="528" y="188" fill="#8fbf99">Catalyst efficiency below threshold · was pending</text>
+    <rect x="348" y="204" width="580" height="30" rx="6" fill="#1d2630"/>
+    <text x="360" y="224" fill="#8b98a5" font-weight="600">NEW</text><text x="470" y="224" fill="#8b98a5">none</text>
+  </g>
+
+  <text x="348" y="262" font-size="11" fill="#8b98a5">READINESS MONITORS</text>
+  <g font-size="12">
+    <text x="348" y="286" fill="#c4ccd4">Catalyst</text><text x="560" y="286" fill="#8b98a5">not ready</text><text x="640" y="286" fill="#8b98a5">→</text><text x="670" y="286" fill="#8b98a5">not ready</text>
+    <text x="348" y="308" fill="#c4ccd4">EVAP</text><text x="560" y="308" fill="#8b98a5">not ready</text><text x="640" y="308" fill="#8b98a5">→</text><text x="670" y="308" fill="#7ee08f">✓ ready</text>
+    <text x="348" y="330" fill="#c4ccd4">O₂ sensor, O₂ heater, misfire, fuel, components</text><text x="670" y="330" fill="#7ee08f">✓ unchanged, ready</text>
+    <text x="928" y="308" fill="#7ee08f" text-anchor="end">5/7 → 6/7</text>
+  </g>
+
+  <text x="348" y="364" font-size="11" fill="#8b98a5">KEY VALUES</text>
+  <g font-size="12">
+    <line x1="348" y1="372" x2="928" y2="372" stroke="#24303b"/>
+    <text x="348" y="392" fill="#8b98a5" font-size="10">READING</text><text x="600" y="392" fill="#8b98a5" font-size="10">A</text><text x="700" y="392" fill="#8b98a5" font-size="10">B</text><text x="928" y="392" fill="#8b98a5" font-size="10" text-anchor="end">CHANGE</text>
+    <text x="348" y="416" fill="#c4ccd4">Long-term fuel trim B1 (idle)</text><text x="600" y="416" fill="#e6edf3">+11.7 %</text><text x="700" y="416" fill="#ffd57a">+14.1 %</text><text x="928" y="416" fill="#e3b341" text-anchor="end">▲ 2.4 % worse</text>
+    <text x="348" y="440" fill="#c4ccd4">Battery, engine off</text><text x="600" y="440" fill="#e6edf3">12.5 V</text><text x="700" y="440" fill="#e6edf3">12.6 V</text><text x="928" y="440" fill="#8b98a5" text-anchor="end">≈ same</text>
+    <text x="348" y="464" fill="#c4ccd4">Distance with MIL on</text><text x="600" y="464" fill="#e6edf3">0 km</text><text x="700" y="464" fill="#e6edf3">212 km</text><text x="928" y="464" fill="#e3b341" text-anchor="end">▲ MIL came on</text>
+    <text x="348" y="488" fill="#c4ccd4">Coverage</text><text x="600" y="488" fill="#e6edf3">35/41</text><text x="700" y="488" fill="#e6edf3">36/41</text><text x="928" y="488" fill="#8b98a5" text-anchor="end">+1 (ABS still no response)</text>
+  </g>
+  <rect x="348" y="512" width="580" height="56" rx="8" fill="#1d2630"/>
+  <text x="362" y="534" font-size="12" fill="#e6edf3" font-weight="600">Summary</text>
+  <text x="362" y="554" font-size="12" fill="#c4ccd4">Lean condition persists and the long-term trim is still rising; the check-engine light came on since A.</text>
+</svg><figcaption>Figure 8 — Saved scans per vehicle (partial scans are marked). Tick two to compare: fault codes new / still present / gone, readiness changes and key value deltas, with a one-line summary.</figcaption></figure>
+<h3>7.6 Maintenance and inspection</h3>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect width="960" height="600" rx="10" fill="#0f1419"/>
+  <rect width="960" height="48" rx="10" fill="#151c23"/><rect y="38" width="960" height="10" fill="#151c23"/>
+  <text x="20" y="30" font-size="15" font-weight="700" fill="#e6edf3">car-diagnostic-analyser</text>
+  <text x="250" y="30" font-size="12" fill="#8b98a5">Maintenance &amp; inspection · 2008 VW Golf 1.6 · odometer 148,200 km</text>
+  <rect x="826" y="12" width="118" height="26" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="885" y="29" text-anchor="middle" font-size="12" fill="#e6edf3">Update odometer</text>
+
+  <!-- service items -->
+  <rect x="16" y="62" width="560" height="522" rx="10" fill="#151c23" stroke="#24303b"/>
+  <text x="32" y="88" font-size="13" font-weight="700" fill="#e6edf3">Service items</text>
+  <text x="560" y="88" font-size="11" fill="#58a6ff" text-anchor="end">+ Add item</text>
+  <g font-size="11" fill="#8b98a5">
+    <text x="32" y="114">ITEM</text><text x="186" y="114">INTERVAL</text><text x="312" y="114">LAST DONE</text><text x="400" y="114">USED</text><text x="560" y="114" text-anchor="end">STATUS</text>
+  </g>
+  <line x1="32" y1="122" x2="560" y2="122" stroke="#24303b"/>
+  <g font-size="12">
+    <!-- row helper: y base -->
+    <text x="32" y="148" fill="#e6edf3">Oil &amp; oil filter</text><text x="186" y="148" fill="#c4ccd4">15,000 km / 12 mo</text><text x="312" y="148" fill="#c4ccd4">Jun 2026</text><text x="312" y="162" fill="#6e7681" font-size="10">144,100 km</text>
+    <rect x="400" y="140" width="90" height="8" rx="4" fill="#24303b"/><rect x="400" y="140" width="25" height="8" rx="4" fill="#3fb950"/><text x="400" y="162" fill="#6e7681" font-size="10">4,100 km · 5 mo</text>
+    <rect x="512" y="136" width="48" height="18" rx="9" fill="#12261a"/><text x="536" y="149" text-anchor="middle" font-size="10" fill="#7ee08f">OK</text>
+
+    <text x="32" y="198" fill="#e6edf3">Air filter</text><text x="186" y="198" fill="#c4ccd4">30,000 km / 24 mo</text><text x="312" y="198" fill="#c4ccd4">Mar 2025</text><text x="312" y="212" fill="#6e7681" font-size="10">127,200 km</text>
+    <rect x="400" y="190" width="90" height="8" rx="4" fill="#24303b"/><rect x="400" y="190" width="75" height="8" rx="4" fill="#3fb950"/><text x="400" y="212" fill="#6e7681" font-size="10">21,000 km · 20 mo</text>
+    <rect x="512" y="186" width="48" height="18" rx="9" fill="#12261a"/><text x="536" y="199" text-anchor="middle" font-size="10" fill="#7ee08f">OK</text>
+
+    <text x="32" y="248" fill="#e6edf3">Cabin (pollen) filter</text><text x="186" y="248" fill="#c4ccd4">15,000 km / 12 mo</text><text x="312" y="248" fill="#c4ccd4">Nov 2025</text><text x="312" y="262" fill="#6e7681" font-size="10">138,900 km</text>
+    <rect x="400" y="240" width="90" height="8" rx="4" fill="#24303b"/><rect x="400" y="240" width="90" height="8" rx="4" fill="#d29922"/><text x="400" y="262" fill="#e3b341" font-size="10">9,300 km · 12 mo</text>
+    <rect x="512" y="236" width="48" height="18" rx="9" fill="#2b2210"/><text x="536" y="249" text-anchor="middle" font-size="10" fill="#e3b341">DUE</text>
+
+    <text x="32" y="298" fill="#e6edf3">Brake fluid</text><text x="186" y="298" fill="#c4ccd4">24 mo</text><text x="312" y="298" fill="#c4ccd4">Mar 2025</text>
+    <rect x="400" y="290" width="90" height="8" rx="4" fill="#24303b"/><rect x="400" y="290" width="75" height="8" rx="4" fill="#3fb950"/><text x="400" y="312" fill="#6e7681" font-size="10">20 mo · due Mar 2027</text>
+    <rect x="512" y="286" width="48" height="18" rx="9" fill="#12261a"/><text x="536" y="299" text-anchor="middle" font-size="10" fill="#7ee08f">OK</text>
+
+    <text x="32" y="348" fill="#e6edf3">Spark plugs</text><text x="186" y="348" fill="#c4ccd4">60,000 km</text><text x="312" y="348" fill="#c4ccd4">Feb 2024</text><text x="312" y="362" fill="#6e7681" font-size="10">120,000 km</text>
+    <rect x="400" y="340" width="90" height="8" rx="4" fill="#24303b"/><rect x="400" y="340" width="42" height="8" rx="4" fill="#3fb950"/><text x="400" y="362" fill="#6e7681" font-size="10">28,200 km</text>
+    <rect x="512" y="336" width="48" height="18" rx="9" fill="#12261a"/><text x="536" y="349" text-anchor="middle" font-size="10" fill="#7ee08f">OK</text>
+
+    <text x="32" y="398" fill="#e6edf3">Timing belt + pump</text><text x="186" y="398" fill="#c4ccd4">per manual</text><text x="312" y="398" fill="#6e7681">not logged</text>
+    <rect x="400" y="390" width="90" height="8" rx="4" fill="#24303b" stroke="#a371f7" stroke-dasharray="3 2"/><text x="400" y="412" fill="#c9a6ff" font-size="10">set interval &amp; last done</text>
+    <rect x="496" y="386" width="64" height="18" rx="9" fill="#211736"/><text x="528" y="399" text-anchor="middle" font-size="10" fill="#c9a6ff">UNKNOWN</text>
+  </g>
+  <rect x="32" y="436" width="528" height="132" rx="8" fill="#1d2630"/>
+  <text x="46" y="460" font-size="12" font-weight="600" fill="#e6edf3">How status is worked out</text>
+  <g font-size="11" fill="#c4ccd4">
+    <text x="46" y="482">• Intervals come from your owner's manual — the app ships no defaults it can't vouch for.</text>
+    <text x="46" y="502">• DUE when distance or time is exceeded, whichever comes first; SOON within 10 %.</text>
+    <text x="46" y="522">• Due and unknown items appear in every scan report as Manual inspection rows.</text>
+    <text x="46" y="542">• Where a profile can read the car's own service counter (phase 16), it's shown</text>
+    <text x="58" y="558">alongside your log, labelled “from car”.</text>
+  </g>
+
+  <!-- log inspection -->
+  <rect x="592" y="62" width="352" height="340" rx="10" fill="#151c23" stroke="#3f2c66"/>
+  <text x="608" y="88" font-size="13" font-weight="700" fill="#e6edf3">Log inspection</text>
+  <text x="928" y="88" font-size="11" fill="#8b98a5" text-anchor="end">8 Nov 2026 · 148,200 km</text>
+  <text x="608" y="114" font-size="11" fill="#8b98a5">TYRE PRESSURE (bar) · recommended 2.2</text>
+  <rect x="712" y="124" width="64" height="104" rx="22" fill="#1a232d" stroke="#3a4552"/>
+  <g font-size="12">
+    <rect x="608" y="126" width="92" height="40" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="618" y="142" font-size="10" fill="#8b98a5">FL</text><text x="690" y="158" text-anchor="end" font-weight="600" fill="#e6edf3">2.3</text>
+    <rect x="788" y="126" width="92" height="40" rx="6" fill="#2b2210" stroke="#d29922"/><text x="798" y="142" font-size="10" fill="#e3b341">FR · low</text><text x="870" y="158" text-anchor="end" font-weight="600" fill="#ffd57a">1.8</text>
+    <rect x="608" y="186" width="92" height="40" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="618" y="202" font-size="10" fill="#8b98a5">RL</text><text x="690" y="218" text-anchor="end" font-weight="600" fill="#e6edf3">2.2</text>
+    <rect x="788" y="186" width="92" height="40" rx="6" fill="#1d2630" stroke="#58a6ff"/><text x="798" y="202" font-size="10" fill="#8b98a5">RR</text><text x="870" y="218" text-anchor="end" fill="#6e7681">|</text>
+  </g>
+  <g font-size="11" fill="#8b98a5">
+    <text x="608" y="252">TREAD (mm)</text><text x="770" y="252">BRAKE PADS (mm)</text>
+  </g>
+  <g font-size="12">
+    <rect x="608" y="260" width="146" height="30" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="618" y="280" fill="#e6edf3">F 5.5 · R 6.0</text>
+    <rect x="770" y="260" width="158" height="30" rx="6" fill="#1d2630" stroke="#3a4552"/><text x="780" y="280" fill="#e6edf3">F 7 · R —</text>
+    <text x="608" y="314" font-size="11" fill="#8b98a5">OIL LEVEL</text>
+    <rect x="608" y="322" width="70" height="26" rx="13" fill="#1d2630" stroke="#3a4552"/><text x="643" y="339" text-anchor="middle" font-size="11" fill="#8b98a5">Low</text>
+    <rect x="684" y="322" width="70" height="26" rx="13" fill="#12261a" stroke="#3fb950"/><text x="719" y="339" text-anchor="middle" font-size="11" fill="#7ee08f">OK</text>
+    <rect x="760" y="322" width="70" height="26" rx="13" fill="#1d2630" stroke="#3a4552"/><text x="795" y="339" text-anchor="middle" font-size="11" fill="#8b98a5">High</text>
+  </g>
+  <rect x="608" y="358" width="320" height="32" rx="7" fill="#8250df"/>
+  <text x="768" y="379" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Save inspection</text>
+
+  <!-- recent -->
+  <rect x="592" y="414" width="352" height="170" rx="10" fill="#151c23" stroke="#24303b"/>
+  <text x="608" y="440" font-size="13" font-weight="700" fill="#e6edf3">Recent</text>
+  <g font-size="12">
+    <text x="608" y="466" fill="#8b98a5" font-size="11">8 Nov</text><text x="660" y="466" fill="#c4ccd4">Tyres FL 2.3 · FR 1.8 · RL 2.2</text>
+    <text x="608" y="490" fill="#8b98a5" font-size="11">2 Nov</text><text x="660" y="490" fill="#c4ccd4">Front pads 7 mm · oil level OK</text>
+    <text x="608" y="514" fill="#8b98a5" font-size="11">19 Oct</text><text x="660" y="514" fill="#c4ccd4">Tyres all 2.2 · tread F 5.6 · R 6.1</text>
+    <text x="608" y="538" fill="#8b98a5" font-size="11">Jun 26</text><text x="660" y="538" fill="#c4ccd4">Service: oil &amp; oil filter (garage)</text>
+  </g>
+  <text x="608" y="568" font-size="11" fill="#58a6ff">View all 14 entries →</text>
+</svg><figcaption>Figure 9 — Service items tracked by distance and/or time from the owner's manual, and a quick inspection form for tyre pressures, tread, pads and oil level. Due, unknown and recent items feed every scan report as Manual inspection rows.</figcaption></figure>
+<h3>7.7 Vehicles and settings</h3>
 <ul>
-  <li><b>Live data</b>: pick up to 6 supported PIDs, streaming charts, record to file.</li>
-  <li><b>History</b>: list of saved scans per vehicle; <b>Compare</b> shows new / cleared codes and readiness changes between two scans.</li>
-  <li><b>Maintenance &amp; inspection</b>: service items with interval by distance and/or time (oil &amp; filter, air filter, cabin filter, brake fluid, spark plugs, timing belt), and inspection entries (pad mm, tread mm, tyre pressures, notes). Due items feed the report as <span class="pill p-man">Manual</span>.</li>
-  <li><b>Vehicles</b>: VIN, nickname, profile, recommended tyre pressures, odometer.</li>
+  <li><b>Vehicles</b>: VIN, nickname, profile, recommended tyre pressures (from the door-pillar sticker), odometer.</li>
+  <li><b>Settings</b>: units (°C / bar / km by default, psi and miles optional), preferred adapter baud rate, VIN masking in exports, JSON backup / restore.</li>
 </ul>
 
 <h2 id="data"><span class="n">8</span>Data model and storage</h2>

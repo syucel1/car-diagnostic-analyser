@@ -1,0 +1,39 @@
+{
+  "name": "Healthy car",
+  "description": "No fault codes, all readiness monitors complete, every module answering, tyres and pads logged.",
+  "vehicle": "2008 VW Golf 1.6 (simulated)",
+  "adapter": { "ati": "ELM327 v1.4b (simulated)", "voltage": "14.2V", "latencyMs": [150, 400] },
+  "protocol": "6",
+  "ecus": {
+    "7E8": {
+      "responses": {
+        "0100": "41 00 BE 3F A8 13",
+        "0101": "41 01 00 07 65 00",
+        "03": "43 00",
+        "07": "47 00",
+        "0A": "4A 00",
+        "0104": "41 04 38",
+        "0105": "41 05 82",
+        "0106": "41 06 7E",
+        "0107": "41 07 82",
+        "010C": "41 0C 0C 80",
+        "010F": "41 0F 3A",
+        "0110": "41 10 01 2C",
+        "0111": "41 11 25",
+        "011C": "41 1C 06",
+        "0121": "41 21 00 00",
+        "0131": "41 31 2E E0",
+        "0142": "41 42 37 78",
+        "015C": "41 5C 7D"
+      }
+    },
+    "7E9": { "responses": { "03": "43 00" } },
+    "7B8": { "responses": { "1902FF": "59 02 FF" } }
+  },
+  "manual": {
+    "tyrePressureBar": { "FL": 2.2, "FR": 2.2, "RL": 2.2, "RR": 2.3 },
+    "recommendedBar": 2.2,
+    "brakePadMm": { "front": 9, "rear": 8 },
+    "oilLevel": "ok"
+  }
+}

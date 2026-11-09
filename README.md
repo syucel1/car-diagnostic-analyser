@@ -4,7 +4,7 @@ Browser-based, **read-only** car diagnostics over a USB OBD-II adapter.
 
 Plug a USB OBD-II adapter into your car and your laptop, open the app in Chrome or Edge, and press **Run scan**. A top-down car diagram lights up system by system while a counter shows exactly how many checks have run and what each one returned. When it finishes you get a report that separates what the car **told us** from what **needs a human to look at**.
 
-> **Status:** design phase — no application code yet. The full design is in [design.html](design.html) / [design.pdf](design.pdf).
+> **Status:** Phase 1 of 16 done — the scan engine, simulator and live progress UI run against a **demo car**. Real USB scanning arrives in Phase 2. The full design is in [design.html](design.html) / [design.pdf](design.pdf).
 
 ![Scan in progress](design/wireframes/scan-screen.svg)
 
@@ -18,8 +18,8 @@ Plug a USB OBD-II adapter into your car and your laptop, open the app in Chrome 
 - [Screens](#screens)
 - [Read-only by design](#read-only-by-design)
 - [Hardware and compatibility](#hardware-and-compatibility)
-- [Getting started (planned)](#getting-started-planned)
-- [Project structure (planned)](#project-structure-planned)
+- [Getting started](#getting-started)
+- [Project structure](#project-structure)
 - [Tech stack](#tech-stack)
 - [Roadmap](#roadmap)
 - [Design documents](#design-documents)
@@ -122,9 +122,9 @@ Car (ECUs) ─► OBD-II socket ─► USB OBD adapter (ELM327/STN) ─► Lapto
 
 Drivers, first-connection checklist and a terminal sanity test: [design/hardware-setup.md](design/hardware-setup.md).
 
-## Getting started (planned)
+## Getting started
 
-> These commands will work once Phase 1 lands.
+Needs [Node.js](https://nodejs.org/) 22.12 or newer.
 
 ```bash
 git clone https://github.com/<you>/car-diagnostic-analyser.git
@@ -133,34 +133,48 @@ npm install
 npm run dev          # http://localhost:5173 — open in Chrome or Edge
 ```
 
+Then choose a scenario under **Try the demo car** and press **Run demo scan**.
+
 | Command | What it does |
 |---|---|
-| `npm run dev` | Start the dev server |
+| `npm run dev` | Start the dev server with hot reload |
 | `npm test` | Unit and simulator-driven scan tests (Vitest) |
-| `npm run test:e2e` | UI tests against the demo car (Playwright) |
-| `npm run build` | Production build to `dist/` (static, deployable to GitHub Pages) |
+| `npm run typecheck` | TypeScript strict type check |
+| `npm run build` | Type check + production build to `dist/` (static, deployable to GitHub Pages) |
+| `npm run preview` | Serve the production build locally |
 | `python design/build.py` | Rebuild `design.html` and `design.pdf` from `design/` |
 
-**Without hardware:** open the app and choose **Try the demo car**.
-**With a car:** park, handbrake on, ignition on → plug in the adapter → **Choose adapter…** → pick its COM port → **Run scan**.
+### Demo scenarios
 
-## Project structure (planned)
+| Scenario | What you'll see |
+|---|---|
+| Lean engine + low front-right tyre | Check-engine light on, stored P0171, long-term fuel trim +14 %, ABS **no response**, oil temperature unsupported, low tyre from the inspection log |
+| Healthy car | Everything answers, no faults, all readiness monitors complete |
+| Flaky adapter | A timeout and a bus error recovered by retrying, then the cable is "pulled" — partial report with the remaining checks marked *not run* |
+
+Scenario files live in [`sim/scenarios/`](sim/scenarios/); the format is described in [design/testing-and-simulator.md](design/testing-and-simulator.md).
+
+**With a real car (from Phase 2):** park, handbrake on, ignition on → plug in the adapter → **Choose adapter…** → pick its COM port → **Run scan**.
+
+## Project structure
 
 ```
 car-diagnostic-analyser/
 ├─ design.html, design.pdf   design document
 ├─ design/                   detail docs, wireframes, build script
+├─ index.html, vite.config.ts, tsconfig.json, package.json
 ├─ src/
-│  ├─ transport/             ElmSerialTransport (Web Serial), SimulatorTransport
-│  ├─ protocol/              OBD-II & UDS codecs, ISO-TP, DTC and PID decoders
-│  ├─ guard/                 ReadOnlyGuard + allowlist
-│  ├─ scan/                  discovery, planner, runner, events
-│  ├─ profiles/              generic-obd2.json, vehicles/*.json
-│  ├─ data/                  IndexedDB repositories and migrations
-│  └─ ui/                    screens, car diagram, components
+│  ├─ main.tsx               entry point
+│  ├─ transport/             Transport interface, SimulatorTransport, scenario format
+│  ├─ protocol/              ELM327 reply parsing, PID / DTC / monitor-status decoders
+│  ├─ scan/                  runner, events, progress reducer, demo plan
+│  └─ ui/                    connect + scan screens, status wording, styles
 ├─ sim/scenarios/            demo-car and test scenarios (JSON)
-└─ tests/
+├─ tests/                    Vitest suites (protocol, transport, scan)
+└─ .github/workflows/ci.yml  test + build on every push
 ```
+
+Coming in later phases: `src/guard/` (read-only allowlist, phase 2), `src/profiles/` (phase 13), `src/data/` (IndexedDB, phase 9).
 
 Architecture, interfaces and event model: [design/architecture.md](design/architecture.md).
 
@@ -179,7 +193,7 @@ Architecture, interfaces and event model: [design/architecture.md](design/archit
 ## Roadmap
 
 ### v0.1 — Generic engine scan with live progress
-1. Project skeleton, simulator and progress UI
+1. ✅ Project skeleton, simulator and progress UI
 2. USB connection over Web Serial + read-only guard
 3. Discovery: protocol, VIN, supported readings, battery voltage
 4. Engine fault codes with descriptions

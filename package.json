@@ -1,7 +1,7 @@
 {
   "name": "car-diagnostic-analyser",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Browser-based, read-only car diagnostics over a USB OBD-II adapter",
   "engines": {
     "node": ">=22.12.0"

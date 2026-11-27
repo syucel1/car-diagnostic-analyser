@@ -10,6 +10,19 @@ export interface AdapterInfo {
   id: string;
   /** Battery voltage at the OBD socket in volts, if the adapter reported it. */
   voltage?: number;
+  /** False when the adapter answered but the car did not (ignition off, wrong socket). */
+  vehicleResponding?: boolean;
+  /** ELM protocol number found by the automatic search, e.g. "6". */
+  protocol?: string;
+  /** Human-readable protocol, e.g. "ISO 15765-4 CAN (11-bit, 500 kbaud)". */
+  protocolName?: string;
+}
+
+/** One line of the session log (every command sent and every reply received). */
+export interface LogEntry {
+  t: number;
+  dir: 'tx' | 'rx' | 'note';
+  text: string;
 }
 
 export interface Transport {
@@ -18,7 +31,9 @@ export interface Transport {
   open(): Promise<AdapterInfo>;
   /**
    * Sends one command and resolves with the reply lines (no echo, no prompt,
-   * no blank lines). Rejects with TimeoutError or DisconnectedError.
+   * no blank lines). Every implementation must pass the command through
+   * `assertAllowed` (src/guard) before sending anything.
+   * Rejects with ForbiddenRequestError, TimeoutError or DisconnectedError.
    */
   send(cmd: string, timeoutMs: number): Promise<string[]>;
   close(): Promise<void>;
@@ -37,5 +52,12 @@ export class DisconnectedError extends Error {
   constructor(message = 'Adapter disconnected') {
     super(message);
     this.name = 'DisconnectedError';
+  }
+}
+
+export class AdapterNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AdapterNotFoundError';
   }
 }

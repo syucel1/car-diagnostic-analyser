@@ -4,7 +4,7 @@ Browser-based, **read-only** car diagnostics over a USB OBD-II adapter.
 
 Plug a USB OBD-II adapter into your car and your laptop, open the app in Chrome or Edge, and press **Run scan**. A top-down car diagram lights up system by system while a counter shows exactly how many checks have run and what each one returned. When it finishes you get a report that separates what the car **told us** from what **needs a human to look at**.
 
-> **Status:** Phase 1 of 16 done — the scan engine, simulator and live progress UI run against a **demo car**. Real USB scanning arrives in Phase 2. The full design is in [design.html](design.html) / [design.pdf](design.pdf).
+> **Status:** Phase 2 of 16 done — scans run against a **demo car** or a **real car over a USB adapter**, with every command checked by the read-only guard. Next: Phase 3 (discovery — VIN and the car's supported readings). The full design is in [design.html](design.html) / [design.pdf](design.pdf).
 
 ![Scan in progress](design/wireframes/scan-screen.svg)
 
@@ -151,10 +151,27 @@ Then choose a scenario under **Try the demo car** and press **Run demo scan**.
 | Lean engine + low front-right tyre | Check-engine light on, stored P0171, long-term fuel trim +14 %, ABS **no response**, oil temperature unsupported, low tyre from the inspection log |
 | Healthy car | Everything answers, no faults, all readiness monitors complete |
 | Flaky adapter | A timeout and a bus error recovered by retrying, then the cable is "pulled" — partial report with the remaining checks marked *not run* |
+| Ignition off | The adapter answers but the car doesn't — the "car not responding" error and its troubleshooting tips |
 
 Scenario files live in [`sim/scenarios/`](sim/scenarios/); the format is described in [design/testing-and-simulator.md](design/testing-and-simulator.md).
 
-**With a real car (from Phase 2):** park, handbrake on, ignition on → plug in the adapter → **Choose adapter…** → pick its COM port → **Run scan**.
+### Scanning a real car
+
+1. Park, handbrake on, ignition on (engine off or idling). Plug the adapter into the car, then into USB.
+2. Open the app in **Chrome or Edge** (`npm run dev`, or any https host — Web Serial needs a secure page).
+3. Tick the safety box, press **Choose adapter…** and pick the adapter's COM port. Next time it's listed under *Previously used*.
+4. The app finds the adapter (tries 115200 then 38400 baud), resets it, reads battery voltage and waits for the car's protocol search — up to ~10 seconds on first connect.
+5. The generic engine scan runs: fault codes, check-engine light, readiness monitors, live engine readings and battery voltage. Readings your car doesn't support show as *Unsupported*.
+6. When it's done, **Download log** saves every command and reply as text — handy if something looks wrong. Then unplug the adapter.
+
+Real cars get the generic OBD-II checks only. ABS, gearbox and other modules need a vehicle profile (phase 13); the demo car shows what those will look like.
+
+| Problem | What it means |
+|---|---|
+| *No ELM327-compatible adapter answered* | Wrong COM port, or an adapter at an unusual baud rate |
+| *Couldn't open the serial port* | Another program (serial terminal, other OBD app) has the port open |
+| *The adapter answered, but the car didn't* | Ignition off, or the adapter isn't fully in the socket |
+| Many *No response* results | Slow ECU or a flaky clone adapter — the session log shows the replies |
 
 ## Project structure
 
@@ -165,16 +182,17 @@ car-diagnostic-analyser/
 ├─ index.html, vite.config.ts, tsconfig.json, package.json
 ├─ src/
 │  ├─ main.tsx               entry point
-│  ├─ transport/             Transport interface, SimulatorTransport, scenario format
-│  ├─ protocol/              ELM327 reply parsing, PID / DTC / monitor-status decoders
-│  ├─ scan/                  runner, events, progress reducer, demo plan
-│  └─ ui/                    connect + scan screens, status wording, styles
+│  ├─ guard/                 read-only allowlist — every command passes it before sending
+│  ├─ transport/             ElmSerialTransport (Web Serial), SimulatorTransport, shared ELM init
+│  ├─ protocol/              reply parsing (CAN 11/29-bit + multi-frame, K-line), decoders, protocols
+│  ├─ scan/                  runner, events, progress reducer, check plans
+│  └─ ui/                    connect + scan screens, session log, status wording, styles
 ├─ sim/scenarios/            demo-car and test scenarios (JSON)
-├─ tests/                    Vitest suites (protocol, transport, scan)
+├─ tests/                    Vitest suites (guard, protocol, transport, scan) + a fake serial port
 └─ .github/workflows/ci.yml  test + build on every push
 ```
 
-Coming in later phases: `src/guard/` (read-only allowlist, phase 2), `src/profiles/` (phase 13), `src/data/` (IndexedDB, phase 9).
+Coming in later phases: `src/data/` (IndexedDB, phase 9), `src/profiles/` (phase 13).
 
 Architecture, interfaces and event model: [design/architecture.md](design/architecture.md).
 
@@ -194,7 +212,7 @@ Architecture, interfaces and event model: [design/architecture.md](design/archit
 
 ### v0.1 — Generic engine scan with live progress
 1. ✅ Project skeleton, simulator and progress UI
-2. USB connection over Web Serial + read-only guard
+2. ✅ USB connection over Web Serial + read-only guard
 3. Discovery: protocol, VIN, supported readings, battery voltage
 4. Engine fault codes with descriptions
 5. Check-engine light and readiness monitors

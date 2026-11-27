@@ -1,6 +1,8 @@
+import { ForbiddenRequestError } from '../guard/allowlist';
 import { parseReply } from '../protocol/elm';
+import { framingOf, isCan } from '../protocol/protocols';
 import { DisconnectedError, TimeoutError, type AdapterInfo, type Transport } from '../transport/types';
-import type { CheckOutcome, CheckPlan, CheckResult, ScanEvent, ScanResult, ScanSummary } from './types';
+import type { CheckOutcome, CheckPlan, CheckResult, EvalContext, ScanEvent, ScanResult, ScanSummary } from './types';
 
 export interface RunOptions {
   /** Cancels the scan between checks; the result is a partial report. */
@@ -14,6 +16,13 @@ export interface RunOptions {
 }
 
 const FUNCTIONAL_HEADER = '7DF';
+
+export class VehicleNotRespondingError extends Error {
+  constructor(adapterId: string) {
+    super(`The adapter (${adapterId}) answered, but the car didn't. Is the ignition on and the adapter fully pushed into the socket?`);
+    this.name = 'VehicleNotRespondingError';
+  }
+}
 
 export function emptySummary(total: number): ScanSummary {
   return { total, completed: 0, ok: 0, fault: 0, unsupported: 0, no_response: 0, manual: 0 };
@@ -47,6 +56,18 @@ export async function runScan(transport: Transport, plan: CheckPlan[], opts: Run
   }
   emit({ type: 'scan:connected', t: now(), adapter });
 
+  if (adapter.vehicleResponding === false) {
+    unsubscribe();
+    await transport.close().catch(() => {});
+    const err = new VehicleNotRespondingError(adapter.id);
+    emit({ type: 'scan:error', t: now(), stage: 'connect', message: err.message });
+    throw err;
+  }
+
+  const ctx: EvalContext = { protocol: adapter.protocol, isCan: isCan(adapter.protocol) };
+  // Physical addressing via ATSH is only used on 11-bit CAN; elsewhere requests stay functional.
+  const canAddress = framingOf(adapter.protocol) === 'can11';
+
   emit({
     type: 'scan:planned',
     t: now(),
@@ -79,7 +100,7 @@ export async function runScan(transport: Transport, plan: CheckPlan[], opts: Run
       outcome = check.manual ?? { status: 'manual', summary: 'Not logged yet' };
     } else {
       try {
-        const wanted = check.header ?? FUNCTIONAL_HEADER;
+        const wanted = canAddress ? (check.header ?? FUNCTIONAL_HEADER) : header;
         if (!check.request.startsWith('AT') && wanted !== header) {
           await transport.send(`ATSH${wanted}`, 1000);
           header = wanted;
@@ -87,7 +108,7 @@ export async function runScan(transport: Transport, plan: CheckPlan[], opts: Run
         while (!outcome) {
           attempts += 1;
           emit({ type: 'check:start', t: now(), checkId: check.id, attempt: attempts });
-          const attempt = await attemptCheck(transport, check, check.timeoutMs ?? defaultTimeout);
+          const attempt = await attemptCheck(transport, check, check.timeoutMs ?? defaultTimeout, ctx);
           if (attempt.retryable && attempts <= retries) continue;
           outcome = attempt.outcome;
         }
@@ -98,7 +119,10 @@ export async function runScan(transport: Transport, plan: CheckPlan[], opts: Run
           emit({ type: 'scan:error', t: now(), stage: 'run', message: 'Adapter disconnected during the scan' });
           break;
         }
-        outcome = { status: 'no_response', summary: `Error: ${messageOf(err)}` };
+        outcome =
+          err instanceof ForbiddenRequestError
+            ? { status: 'no_response', summary: 'Not sent: blocked by the read-only guard' }
+            : { status: 'no_response', summary: `Error: ${messageOf(err)}` };
       }
     }
 
@@ -131,7 +155,7 @@ interface Attempt {
   retryable: boolean;
 }
 
-async function attemptCheck(transport: Transport, check: CheckPlan, timeoutMs: number): Promise<Attempt> {
+async function attemptCheck(transport: Transport, check: CheckPlan, timeoutMs: number, ctx: EvalContext): Promise<Attempt> {
   let lines: string[];
   try {
     lines = await transport.send(check.request!, timeoutMs);
@@ -144,10 +168,10 @@ async function attemptCheck(transport: Transport, check: CheckPlan, timeoutMs: n
 
   if (check.evaluateRaw) return { retryable: false, outcome: check.evaluateRaw(lines) };
 
-  const reply = parseReply(lines);
+  const reply = parseReply(lines, ctx.protocol);
   if (reply.ok) {
     try {
-      return { retryable: false, outcome: check.evaluate ? check.evaluate(reply) : { status: 'ok', summary: 'Reading received' } };
+      return { retryable: false, outcome: check.evaluate ? check.evaluate(reply, ctx) : { status: 'ok', summary: 'Reading received' } };
     } catch (err) {
       return { retryable: false, outcome: { status: 'no_response', summary: `Unreadable reply: ${messageOf(err)}` } };
     }

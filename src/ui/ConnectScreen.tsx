@@ -1,14 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { scenarios } from '../../sim/scenarios';
+import { describePort, getSerial, type SerialPortLike } from '../transport/webSerial';
 
 interface Props {
   onRunDemo: (scenarioId: string) => void;
+  onConnect: (port: SerialPortLike) => void;
 }
 
-export function ConnectScreen({ onRunDemo }: Props) {
+export function ConnectScreen({ onRunDemo, onConnect }: Props) {
   const [scenarioId, setScenarioId] = useState(scenarios[0]!.id);
   const selected = scenarios.find((s) => s.id === scenarioId)!;
-  const hasWebSerial = typeof navigator !== 'undefined' && 'serial' in navigator;
+  const serial = getSerial();
+  const [safe, setSafe] = useState(false);
+  const [error, setError] = useState<string>();
+  const [knownPorts, setKnownPorts] = useState<SerialPortLike[]>([]);
+
+  useEffect(() => {
+    // Ports the user already allowed for this site can be reopened without the picker.
+    serial
+      ?.getPorts()
+      .then(setKnownPorts)
+      .catch(() => {});
+  }, [serial]);
+
+  async function choosePort() {
+    setError(undefined);
+    try {
+      const port = await serial!.requestPort();
+      onConnect(port);
+    } catch (err) {
+      // NotFoundError = the user closed the picker without choosing.
+      if (err instanceof Error && err.name !== 'NotFoundError') setError(err.message);
+    }
+  }
 
   return (
     <main className="connect">
@@ -20,14 +44,34 @@ export function ConnectScreen({ onRunDemo }: Props) {
           <li>Plug the adapter into the socket under the dashboard</li>
           <li>Connect USB, then pick its COM port</li>
         </ol>
-        <button className="btn btn--green" disabled title="USB connection arrives in phase 2">
-          Choose adapter…
-        </button>
-        <p className="note">
-          {hasWebSerial
-            ? 'Your browser supports Web Serial. USB scanning arrives in the next phase.'
-            : 'This browser has no Web Serial. Use Chrome or Edge on a desktop for real scans.'}
-        </p>
+
+        {serial ? (
+          <>
+            <label className="check">
+              <input type="checkbox" checked={safe} onChange={(e) => setSafe(e.target.checked)} />
+              <span>The car is parked with the handbrake on, and I won't drive while scanning</span>
+            </label>
+            <button className="btn btn--green" disabled={!safe} onClick={choosePort}>
+              Choose adapter…
+            </button>
+            {knownPorts.length > 0 && (
+              <div className="known">
+                <span className="note">Previously used:</span>
+                {knownPorts.map((p, i) => (
+                  <button key={i} className="btn btn--ghost btn--small" disabled={!safe} onClick={() => onConnect(p)}>
+                    {describePort(p)}
+                  </button>
+                ))}
+              </div>
+            )}
+            {error && <p className="note note--error">{error}</p>}
+          </>
+        ) : (
+          <p className="banner banner--warn">
+            This browser can't talk to USB adapters. Use Chrome or Edge on a desktop computer (the page must be served
+            over https or from localhost). The demo car works here.
+          </p>
+        )}
         <p className="note">Read-only: this app cannot clear codes, run tests or change settings.</p>
       </section>
 

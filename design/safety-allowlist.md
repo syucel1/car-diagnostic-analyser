@@ -60,11 +60,21 @@ KWP2000 equivalents (`18` read DTCs by status, `21` / `1A` read data by local ID
 | `ATPP*`, `STP*` programmable parameters | Persistently reconfigures the adapter |
 | Anything not on the allowed list | Default deny |
 
+## Implementation (phase 2)
+
+- Code: [`src/guard/allowlist.ts`](../src/guard/allowlist.ts) — `assertAllowed(cmd, ctx)` returns the normalised command or throws `ForbiddenRequestError`.
+- Enforced as the **first step of `send`** in every transport (`ElmSerialTransport`, `SimulatorTransport`), so nothing above the transport can bypass it — including the init sequence.
+- `ATSP` is allowed because it only selects the protocol (the app always uses `ATSP0`, automatic).
+- Not yet enabled: UDS `22` needs DIDs from a vehicle profile (`ctx.allowedDids`, empty until phase 13); the KWP2000 read services (`18`, `21`, `1A`) stay blocked until a profile needs them.
+- If a plan ever contains a blocked request, the check is reported as *No response — not sent: blocked by the read-only guard*.
+
 ## Tests that must exist
 
 - For every blocked SID: a request built through the public API throws `ForbiddenRequestError`, and the simulator transport records **zero** bytes sent.
 - Hex-string fuzzing: random request strings are either allowed (and parse to an allowed SID) or rejected.
 - UDS `22` with a DID not in the active profile is rejected.
+
+Implemented in `tests/guard/allowlist.test.ts` (40 blocked cases, 40,000 fuzzed commands), `tests/transport/serial.test.ts` and `tests/transport/simulator.test.ts` (zero bytes written for blocked commands), and `tests/scan/runner.test.ts` (every planned request passes the guard).
 
 ## Operational safety (shown in the UI)
 

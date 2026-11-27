@@ -1,44 +1,92 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { etaMs, type ScanView } from '../scan/progress';
 import type { OutcomeStatus } from '../scan/types';
-import type { Scenario } from '../transport/scenario';
+import { downloadText, formatSessionLog } from './sessionLog';
 import { formatDuration, OUTCOME_ORDER, STATUS, SYSTEM_LABEL } from './status';
-import { useDemoScan } from './useScan';
+import { useScan, type ScanSource } from './useScan';
 
 interface Props {
-  scenario: Scenario;
+  source: ScanSource;
   onBack: () => void;
 }
 
-export function ScanScreen({ scenario, onBack }: Props) {
-  const { view, start, stop } = useDemoScan(scenario);
+/** Below this the battery may not cope with a long session (design/safety-allowlist.md). */
+const LOW_BATTERY_V = 11.8;
+
+export function ScanScreen({ source, onBack }: Props) {
+  const { view, start, stop, getLog, connectStep } = useScan(source);
   const [filter, setFilter] = useState<OutcomeStatus | null>(null);
   const now = useTicker(view.phase === 'running' || view.phase === 'connecting');
+  const sourceLabel = source.kind === 'demo' ? source.scenario.vehicle : `Your car · ${source.label}`;
+  const finished = view.phase === 'done' || view.phase === 'error';
+
+  const downloadLog = () => {
+    const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    downloadText(`cda-session-${stamp}.txt`, formatSessionLog(getLog(), view, sourceLabel));
+  };
 
   return (
     <main className="scan">
-      <TopBar view={view} vehicle={scenario.vehicle} onStop={stop} onBack={onBack} onRestart={start} />
-      <ProgressPanel view={view} now={now} filter={filter} onFilter={setFilter} />
-      {view.phase === 'done' && <Summary view={view} />}
-      {view.phase === 'error' && (
-        <div className="banner banner--error">
-          Could not connect: {view.error}. Check the adapter and that the ignition is on.
+      <TopBar
+        view={view}
+        vehicle={sourceLabel}
+        onStop={stop}
+        onBack={onBack}
+        onRestart={start}
+        onDownloadLog={finished && getLog().length ? downloadLog : undefined}
+      />
+      {view.adapter?.voltage !== undefined && view.adapter.voltage < LOW_BATTERY_V && (
+        <div className="banner banner--warn">
+          Battery voltage is low ({view.adapter.voltage.toFixed(1)} V). A long session with the ignition on could flatten
+          it — keep scans short, or run the engine.
         </div>
+      )}
+      <ProgressPanel view={view} now={now} filter={filter} onFilter={setFilter} connectStep={connectStep} />
+      {view.phase === 'done' && <Summary view={view} />}
+      {view.phase === 'error' && <ConnectError message={view.error} serial={source.kind === 'serial'} />}
+      {finished && source.kind === 'serial' && view.result?.reason !== 'disconnected' && (
+        <div className="banner banner--info">Finished? Unplug the adapter — some adapters slowly drain the battery.</div>
       )}
       <CheckList view={view} filter={filter} />
     </main>
   );
 }
 
-function TopBar(props: { view: ScanView; vehicle: string; onStop: () => void; onBack: () => void; onRestart: () => void }) {
+function ConnectError({ message, serial }: { message?: string; serial: boolean }) {
+  return (
+    <div className="banner banner--error">
+      <strong>Could not start the scan.</strong> {message}
+      {serial && (
+        <ul className="hints">
+          <li>Check the adapter is pushed fully into the socket and its light is on.</li>
+          <li>Turn the ignition on (engine running is fine).</li>
+          <li>Close any other program using the COM port (serial terminals, other OBD apps).</li>
+          <li>Unplug the USB cable, plug it back in, then press Run again.</li>
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function TopBar(props: {
+  view: ScanView;
+  vehicle: string;
+  onStop: () => void;
+  onBack: () => void;
+  onRestart: () => void;
+  onDownloadLog?: () => void;
+}) {
   const { view } = props;
   const running = view.phase === 'running' || view.phase === 'connecting';
+  const a = view.adapter;
   return (
     <div className="topbar">
-      <div className={`pill ${view.adapter ? 'pill--ok' : 'pill--idle'}`}>
+      <div className={`pill ${a?.vehicleResponding ? 'pill--ok' : a ? 'pill--warn' : 'pill--idle'}`} title={a?.protocolName}>
         <span className="dot" />
-        {view.adapter
-          ? `${view.adapter.id} · ${view.adapter.voltage?.toFixed(1) ?? '–'} V`
+        {a
+          ? [a.id, a.protocolName ?? (a.vehicleResponding === false ? 'car not responding' : undefined), a.voltage !== undefined ? `${a.voltage.toFixed(1)} V` : undefined]
+              .filter(Boolean)
+              .join(' · ')
           : view.phase === 'error'
             ? 'Not connected'
             : 'Connecting…'}
@@ -51,6 +99,11 @@ function TopBar(props: { view: ScanView; vehicle: string; onStop: () => void; on
         </button>
       ) : (
         <>
+          {props.onDownloadLog && (
+            <button className="btn btn--ghost" onClick={props.onDownloadLog} title="Every command and reply, as text">
+              Download log
+            </button>
+          )}
           <button className="btn btn--ghost" onClick={props.onBack}>
             Back
           </button>
@@ -63,7 +116,13 @@ function TopBar(props: { view: ScanView; vehicle: string; onStop: () => void; on
   );
 }
 
-function ProgressPanel(props: { view: ScanView; now: number; filter: OutcomeStatus | null; onFilter: (f: OutcomeStatus | null) => void }) {
+function ProgressPanel(props: {
+  view: ScanView;
+  now: number;
+  filter: OutcomeStatus | null;
+  onFilter: (f: OutcomeStatus | null) => void;
+  connectStep?: string;
+}) {
   const { view, now } = props;
   const { total, summary } = view;
   const elapsed = view.startedAt ? (view.finishedAt ?? now) - view.startedAt : 0;
@@ -130,6 +189,8 @@ function ProgressPanel(props: { view: ScanView; now: number; filter: OutcomeStat
             → {current.module ?? 'Adapter'} · {current.requestLabel} {current.label}
             {view.current.attempt > 1 ? ` · retry ${view.current.attempt - 1}` : ''} · waiting {Math.max(0, now - view.current.since)} ms
           </>
+        ) : view.phase === 'connecting' && props.connectStep ? (
+          <>→ {props.connectStep}</>
         ) : view.phase === 'done' ? (
           <span className="muted">Finished in {formatDuration(elapsed)}.</span>
         ) : (

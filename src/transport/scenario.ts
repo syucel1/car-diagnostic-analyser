@@ -17,6 +17,8 @@ export interface Scenario {
   };
   /** ELM327 protocol number reported by ATDPN, e.g. "6" (ISO 15765-4 CAN 11/500). */
   protocol: string;
+  /** The adapter answers but the car doesn't (every OBD request: UNABLE TO CONNECT). */
+  ignitionOff?: boolean;
   /**
    * ECUs keyed by response CAN id (e.g. "7E8"). Requests are keyed by the
    * request hex without spaces (e.g. "0105", "03"); values are the data bytes

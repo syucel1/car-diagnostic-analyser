@@ -1,0 +1,9 @@
+{
+  "name": "Ignition off",
+  "description": "The adapter answers but the car doesn't — shows the 'car not responding' error you'd get with the ignition off.",
+  "vehicle": "2008 VW Golf 1.6 (simulated)",
+  "adapter": { "ati": "ELM327 v1.4b (simulated)", "voltage": "12.5V", "latencyMs": [150, 400] },
+  "protocol": "6",
+  "ignitionOff": true,
+  "ecus": {}
+}

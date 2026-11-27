@@ -110,3 +110,31 @@ describe('runScan — connection failure', () => {
     expect(events.at(-1)).toMatchObject({ type: 'scan:error', stage: 'connect' });
   });
 });
+
+describe('runScan — car not responding', () => {
+  it('fails at connect with a clear message and runs no checks', async () => {
+    const { ignitionOff } = await import('../../sim/scenarios');
+    const { sim, clock } = simulator(ignitionOff);
+    const events: ScanEvent[] = [];
+    await expect(runScan(sim, buildDemoPlan(), { now: clock.now, onEvent: (e) => events.push(e) })).rejects.toThrow(
+      /ignition/,
+    );
+    expect(events.some((e) => e.type === 'check:start')).toBe(false);
+    expect(events.at(-1)).toMatchObject({ type: 'scan:error', stage: 'connect' });
+  });
+});
+
+describe('buildPlan', () => {
+  it('leaves out the demo-only gearbox and ABS modules for real cars', async () => {
+    const { buildPlan } = await import('../../src/scan/demoPlan');
+    const ids = buildPlan().map((c) => c.id);
+    expect(ids).not.toContain('abs.dtc');
+    expect(ids).not.toContain('gearbox.dtc');
+    expect(buildDemoPlan().map((c) => c.id)).toEqual(expect.arrayContaining(['abs.dtc', 'gearbox.dtc']));
+  });
+
+  it('only sends requests the read-only guard allows', async () => {
+    const { isAllowed } = await import('../../src/guard/allowlist');
+    for (const c of buildDemoPlan()) if (c.request) expect(isAllowed(c.request), c.request).toBe(true);
+  });
+});

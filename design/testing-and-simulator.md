@@ -60,7 +60,12 @@ Rules:
 | `lean-engine-low-tyre.json` | Stored P0171, MIL on, high LTFT, low FR tyre entry, brake fluid due |
 | `abs-offline.json` | Profile car whose ABS module doesn't answer → "No response — not checked" |
 | `old-kline-car.json` | ISO 9141-2, slow replies, 3-codes-per-frame DTC format, few PIDs |
+| `ignition-off.json` | Adapter answers, car doesn't (`"ignitionOff": true`) → connect error with troubleshooting tips |
 | `flaky-adapter.json` | Random `NO DATA`, one timeout, disconnect at 70 % → partial report |
+
+## Fake serial port
+
+`tests/fakeSerialPort.ts` implements the Web Serial port interface on top of a scripted ELM327 (echo until `ATE0`, wrong-baud garbage, chunked output, hangs, unplugging). It drives `ElmSerialTransport` in tests and records every byte written, which is how the guard tests prove blocked commands never reach the wire.
 
 ## Replay
 

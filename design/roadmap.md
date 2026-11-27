@@ -1,6 +1,6 @@
 # Roadmap
 
-**Progress:** Phase 1 complete (9 Nov 2026). Next: Phase 2 — USB connection.
+**Progress:** Phases 1–2 complete (27 Nov 2026). Next: Phase 3 — discovery.
 
 Start with one car, one adapter and a read-only generic scan; extend one system at a time. Every phase ends with something you can demo.
 
@@ -9,7 +9,7 @@ Start with one car, one adapter and a read-only generic scan; extend one system 
 | Phase | Deliverable | Acceptance criteria |
 |---|---|---|
 | **1** Skeleton + simulator ✅ | Vite/React/TS project, `Transport` interface, `SimulatorTransport`, scan engine running a fake plan, progress UI (counter, bar, list) | `npm test` green; demo scan of 20 fake checks shows `k of N` increasing monotonically and a final summary |
-| **2** USB connection | `ElmSerialTransport` over Web Serial; AT init; adapter ID + `ATRV`; `ReadOnlyGuard` | Real adapter connects, shows firmware and voltage; guard tests prove blocked SIDs never reach the port; unplug mid-session handled cleanly |
+| **2** USB connection ✅ | `ElmSerialTransport` over Web Serial; AT init; adapter ID + `ATRV`; `ReadOnlyGuard` | Real adapter connects, shows firmware and voltage; guard tests prove blocked SIDs never reach the port; unplug mid-session handled cleanly |
 | **3** Discovery | Protocol detection, supported-PID bitmaps, VIN, responding ECUs | On the real car: protocol, VIN and supported PID list match a serial-terminal check |
 | **4** Engine fault codes | Services 03 / 07 / 0A, DTC decoding, generic P-code descriptions | Correct codes for CAN and non-CAN reply formats in tests; real car result matches another scanner |
 | **5** MIL + readiness | PID 01 / 41 decoding, readiness panel | All 3 continuous + supported non-continuous monitors shown with ready / not ready |

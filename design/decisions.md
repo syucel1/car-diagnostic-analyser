@@ -44,6 +44,12 @@ Short ADR-style records. Add new entries at the bottom; don't edit accepted ones
 **Decision:** IndexedDB only, JSON export/import for backup. No backend.
 **Consequences:** No sync between devices; nothing to secure server-side.
 
+## ADR-008 Generic real-car scans from phase 2
+**Status:** Accepted (phase 2)
+**Context:** Phase 2 only needed a working connection, but a connection with nothing to do is hard to test on a real car.
+**Decision:** Once connected, run the generic OBD-II plan (no demo-only modules). To make that safe on any car, the parser already handles 11/29-bit CAN with multi-frame replies and K-line/J1850 framing, and the first OBD request (`0100`) is part of connecting so the slow protocol search can't time out a check.
+**Consequences:** Real scans are useful immediately; phase 3 replaces the fixed plan with one built from the car's supported-PID bitmaps.
+
 ## Open
 - **First enhanced-profile car** — must be chosen with care: some older cars use proprietary transport protocols (e.g. VW TP 2.0) for non-engine modules that a plain ELM327 handles poorly.
 - **First adapter** — OBDLink EX vs an existing ELM327 clone.

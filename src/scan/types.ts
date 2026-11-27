@@ -40,6 +40,14 @@ export interface CheckInfo {
   module?: string;
 }
 
+/** What a check's evaluate function knows about the connection. */
+export interface EvalContext {
+  /** ELM protocol number, e.g. "6"; undefined if unknown. */
+  protocol?: string;
+  /** CAN replies carry a DTC count byte; K-line/J1850 replies don't. */
+  isCan: boolean;
+}
+
 export interface CheckPlan extends CheckInfo {
   /** Command to send. Absent for manual checks. */
   request?: string;
@@ -47,7 +55,7 @@ export interface CheckPlan extends CheckInfo {
   header?: string;
   timeoutMs?: number;
   /** Turns a successful reply into an outcome. */
-  evaluate?: (reply: Extract<ParsedReply, { ok: true }>) => CheckOutcome;
+  evaluate?: (reply: Extract<ParsedReply, { ok: true }>, ctx: EvalContext) => CheckOutcome;
   /** For adapter commands (AT…) the raw lines are evaluated instead. */
   evaluateRaw?: (lines: string[]) => CheckOutcome;
   /** Outcome for checks with no electronic source. */

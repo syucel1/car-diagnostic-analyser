@@ -1,11 +1,16 @@
+import { assertAllowed } from '../guard/allowlist';
+import { initElm } from './elmInit';
 import type { Scenario, FaultSpec } from './scenario';
-import { DisconnectedError, TimeoutError, type AdapterInfo, type Transport } from './types';
+import { DisconnectedError, TimeoutError, type AdapterInfo, type LogEntry, type Transport } from './types';
 
 export interface SimulatorOptions {
   /** Injected for tests; defaults to real setTimeout. */
   sleep?: (ms: number) => Promise<void>;
   /** Injected for tests; defaults to Math.random. */
   random?: () => number;
+  /** Receives every command and reply, like the serial transport's session log. */
+  onLog?: (entry: LogEntry) => void;
+  now?: () => number;
 }
 
 const realSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
@@ -14,21 +19,24 @@ const realSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 const FUNCTIONAL_HEADER = '7DF';
 
 /**
- * Behaves like an ELM327 adapter (echo off, headers on, spaces on) attached
- * to the ECUs described by a scenario.
+ * Behaves like an ELM327 adapter (headers on) attached to the ECUs described
+ * by a scenario. Uses the same guard and init sequence as the serial transport.
  */
 export class SimulatorTransport implements Transport {
   readonly kind = 'simulator' as const;
 
   private readonly sleep: (ms: number) => Promise<void>;
   private readonly random: () => number;
+  private readonly now: () => number;
+  private readonly onLog?: (entry: LogEntry) => void;
   private readonly listeners = new Set<() => void>();
   private readonly faultsLeft: Map<FaultSpec, number>;
   private header = FUNCTIONAL_HEADER;
+  private spaces = true;
   private obdRequests = 0;
   private isOpen = false;
   private disconnected = false;
-  /** Every command received, for tests (e.g. proving nothing forbidden was sent). */
+  /** Every command that passed the guard and reached the "adapter", for tests. */
   readonly sent: string[] = [];
 
   constructor(
@@ -37,25 +45,52 @@ export class SimulatorTransport implements Transport {
   ) {
     this.sleep = options.sleep ?? realSleep;
     this.random = options.random ?? Math.random;
+    this.now = options.now ?? Date.now;
+    this.onLog = options.onLog;
     this.faultsLeft = new Map((scenario.faults ?? []).map((f) => [f, f.times ?? 1]));
   }
 
   async open(): Promise<AdapterInfo> {
     if (this.disconnected) throw new DisconnectedError();
     this.isOpen = true;
-    const [id = 'ELM327'] = await this.send('ATZ', 2000);
-    for (const cmd of ['ATE0', 'ATL0', 'ATS1', 'ATH1', 'ATAT1', 'ATSP0']) await this.send(cmd, 1000);
-    const [rv = ''] = await this.send('ATRV', 1000);
-    const voltage = Number.parseFloat(rv);
-    return Number.isFinite(voltage) ? { id, voltage } : { id };
+    const [banner = 'ELM327'] = await this.send('ATZ', 2000);
+    return initElm((cmd, t) => this.send(cmd, t), banner);
   }
 
   async send(rawCmd: string, timeoutMs: number): Promise<string[]> {
+    const cmd = assertAllowed(rawCmd); // throws before anything is "sent"
     if (!this.isOpen || this.disconnected) throw new DisconnectedError();
-    const cmd = rawCmd.replace(/\s+/g, '').toUpperCase();
     this.sent.push(cmd);
+    this.log('tx', cmd);
+    const lines = await this.respond(cmd, timeoutMs);
+    for (const l of lines) this.log('rx', l);
+    return lines;
+  }
 
-    if (cmd.startsWith('AT')) {
+  async close(): Promise<void> {
+    this.isOpen = false;
+  }
+
+  onDisconnect(cb: () => void): () => void {
+    this.listeners.add(cb);
+    return () => this.listeners.delete(cb);
+  }
+
+  /** Simulates pulling the USB cable. */
+  disconnect(): void {
+    if (this.disconnected) return;
+    this.disconnected = true;
+    this.isOpen = false;
+    this.log('note', 'adapter disconnected');
+    for (const cb of this.listeners) cb();
+  }
+
+  private log(dir: LogEntry['dir'], text: string) {
+    this.onLog?.({ t: this.now(), dir, text });
+  }
+
+  private async respond(cmd: string, timeoutMs: number): Promise<string[]> {
+    if (cmd.startsWith('AT') || cmd.startsWith('ST')) {
       await this.sleep(5);
       return this.at(cmd);
     }
@@ -82,6 +117,11 @@ export class SimulatorTransport implements Transport {
       }
     }
 
+    if (this.scenario.ignitionOff) {
+      await this.sleep(latency * 4);
+      return ['SEARCHING...', 'UNABLE TO CONNECT'];
+    }
+
     const targets = this.targetEcus();
     // A physically addressed module that never answers: the request times out.
     if (targets.length === 1 && this.scenario.ecus[targets[0]!]?.noResponse) {
@@ -96,41 +136,25 @@ export class SimulatorTransport implements Transport {
       const data = spec && !spec.noResponse ? spec.responses[cmd] : undefined;
       if (data === undefined) continue;
       const bytes = data.trim().split(/\s+/);
-      lines.push(`${ecu} ${bytes.length.toString(16).toUpperCase().padStart(2, '0')} ${bytes.join(' ')}`);
+      const pci = bytes.length.toString(16).toUpperCase().padStart(2, '0');
+      const parts = [ecu, pci, ...bytes];
+      lines.push(this.spaces ? parts.join(' ') : parts.join(''));
     }
     return lines.length ? lines : ['NO DATA'];
-  }
-
-  async close(): Promise<void> {
-    this.isOpen = false;
-  }
-
-  onDisconnect(cb: () => void): () => void {
-    this.listeners.add(cb);
-    return () => this.listeners.delete(cb);
-  }
-
-  /** Simulates pulling the USB cable. */
-  disconnect(): void {
-    if (this.disconnected) return;
-    this.disconnected = true;
-    this.isOpen = false;
-    for (const cb of this.listeners) cb();
   }
 
   private at(cmd: string): string[] {
     const { adapter, protocol } = this.scenario;
     if (cmd === 'ATZ' || cmd === 'ATWS') {
       this.header = FUNCTIONAL_HEADER;
+      this.spaces = true;
       return [adapter.ati];
     }
     if (cmd === 'ATI') return [adapter.ati];
     if (cmd === 'ATRV') return [adapter.voltage];
-    if (cmd === 'ATDPN') return [`A${protocol}`];
-    if (cmd.startsWith('ATSH')) {
-      this.header = cmd.slice(4);
-      return ['OK'];
-    }
+    if (cmd === 'ATDPN') return [this.scenario.ignitionOff ? 'A0' : `A${protocol}`];
+    if (cmd === 'ATS0' || cmd === 'ATS1') this.spaces = cmd === 'ATS1';
+    if (cmd.startsWith('ATSH')) this.header = cmd.slice(4);
     return ['OK'];
   }
 

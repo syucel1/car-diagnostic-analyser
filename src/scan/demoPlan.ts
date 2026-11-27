@@ -3,12 +3,26 @@ import type { EcuReply, ParsedReply } from '../protocol/elm';
 import type { ManualSpec } from '../transport/scenario';
 import type { CheckOutcome, CheckPlan, SystemId } from './types';
 
-/**
- * Phase 1 plan: a fixed list of checks. From phase 3 the planner builds this
- * from discovery (supported-PID bitmaps, responding modules, vehicle profile).
- */
+export interface PlanOptions {
+  manual?: ManualSpec;
+  /**
+   * Adds the gearbox and ABS checks, which use fixed module addresses that only
+   * the demo car has. Real cars get these from vehicle profiles (phase 13).
+   */
+  includeDemoModules?: boolean;
+}
+
+/** Demo-car plan: generic checks plus the simulated gearbox and ABS modules. */
 export function buildDemoPlan(manual: ManualSpec = {}): CheckPlan[] {
-  return [
+  return buildPlan({ manual, includeDemoModules: true });
+}
+
+/**
+ * A fixed list of checks. From phase 3 the planner builds this from discovery
+ * (supported-PID bitmaps, responding modules, vehicle profile).
+ */
+export function buildPlan({ manual = {}, includeDemoModules = false }: PlanOptions = {}): CheckPlan[] {
+  const plan: CheckPlan[] = [
     // Engine
     monitorCheck('engine.mil', 'engine', 'Check-engine light', (m) =>
       m.milOn
@@ -62,7 +76,39 @@ export function buildDemoPlan(manual: ManualSpec = {}): CheckPlan[] {
     },
     pidCheck('battery.module', 'battery', 0x42, (v) => (v < 11.8 ? ['fault', 'low'] : ['ok'])),
 
-    // Other modules (fixed addresses for the demo; phase 13 moves these into vehicle profiles)
+    // Manual inspection
+    tyreCheck(manual),
+    {
+      id: 'brakes.pads',
+      system: 'brakes',
+      label: 'Brake pad thickness',
+      source: 'manual',
+      manual: padOutcome(manual),
+    },
+    {
+      id: 'oil.level',
+      system: 'oil',
+      label: 'Oil level (dipstick)',
+      source: 'manual',
+      manual:
+        manual.oilLevel === undefined
+          ? { status: 'manual', summary: 'Not logged — check the dipstick' }
+          : manual.oilLevel === 'ok'
+            ? { status: 'manual', summary: 'Logged OK' }
+            : { status: 'fault', summary: `Logged ${manual.oilLevel}` },
+    },
+  ];
+  if (!includeDemoModules) return plan;
+
+  // Other modules (fixed addresses for the demo; phase 13 moves these into vehicle profiles).
+  // Inserted before the manual checks so the scan order stays front-to-back.
+  const firstManual = plan.findIndex((c) => c.source === 'manual');
+  plan.splice(firstManual, 0, ...demoModuleChecks());
+  return plan;
+}
+
+function demoModuleChecks(): CheckPlan[] {
+  return [
     dtcCheck('gearbox.dtc', 'gearbox', 'Gearbox fault codes', '03', 0x43, '7E1', 'Gearbox (7E9)'),
     {
       id: 'abs.dtc',
@@ -84,28 +130,6 @@ export function buildDemoPlan(manual: ManualSpec = {}): CheckPlan[] {
           ? { status: 'fault', summary: codes.join(', '), dtcs: codes }
           : { status: 'ok', summary: 'Checked · no faults reported', dtcs: [] };
       },
-    },
-
-    // Manual inspection
-    tyreCheck(manual),
-    {
-      id: 'brakes.pads',
-      system: 'brakes',
-      label: 'Brake pad thickness',
-      source: 'manual',
-      manual: padOutcome(manual),
-    },
-    {
-      id: 'oil.level',
-      system: 'oil',
-      label: 'Oil level (dipstick)',
-      source: 'manual',
-      manual:
-        manual.oilLevel === undefined
-          ? { status: 'manual', summary: 'Not logged — check the dipstick' }
-          : manual.oilLevel === 'ok'
-            ? { status: 'manual', summary: 'Logged OK' }
-            : { status: 'fault', summary: `Logged ${manual.oilLevel}` },
     },
   ];
 }
@@ -193,10 +217,10 @@ function dtcCheck(
     requestLabel: request,
     header,
     module,
-    evaluate: (reply) => {
+    evaluate: (reply, ctx) => {
       const codes = reply.replies.flatMap((r) => {
         if (r.bytes[0] !== responseSid) throw new Error('reply does not match request');
-        return decodeDtcList(r.bytes.slice(1), true);
+        return decodeDtcList(r.bytes.slice(1), ctx.isCan);
       });
       if (!codes.length) return { status: 'ok', summary: 'None', dtcs: [] };
       return {
